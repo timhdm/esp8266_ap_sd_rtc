@@ -1,0 +1,137 @@
+html {
+  font-family: Arial;
+  color: rgb(50, 50, 50);
+  display: inline-block;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+body {
+  max-width: 600px;
+  margin: 0px auto;
+  padding-bottom: 25px;
+}
+
+button {
+  color: rgba(255, 255, 255, 1); /* цвет текста */
+  text-decoration: none; /* убирать подчёркивание у ссылок */
+  user-select: none; /* убирать выделение текста */
+  background-color: rgba(204, 0, 75, 1); /* фон кнопки */
+  font-size: 1rem;
+  padding: 0.75em 1em; /* отступ от текста */
+  border-radius: 10px;
+  border: 0;
+  outline: none; /* убирать контур в Mozilla */
+}
+
+button:disabled {
+  background-color: rgba(204, 204, 204, 1); /* фон кнопки */
+}
+
+input {
+  font-size: small;
+  font-weight: bold;
+  width: 100%;
+  padding: 0.3rem;
+  box-sizing: border-box;
+  background: none;
+  outline: none;
+  resize: none;
+  border: 0;
+  transition: all 0.3s;
+  border-bottom: 2px solid rgba(204, 204, 204, 1);
+}
+
+input:focus {
+  border-bottom: 2px solid rgba(204, 0, 75, 1);
+}
+
+td {
+  padding-left: 10px; 
+  padding-bottom: 20px; 
+}
+
+.headcontainer {
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.headbutton {
+  color: rgba(255, 255, 255, 1); /* цвет текста */
+  background-color: rgba(204, 0, 75, 1); /* фон кнопки */
+  font-size: 1.4rem;
+  padding: 0.45rem 0.5rem; /* отступ от текста */
+  margin-left: 0.5rem;
+  text-decoration: none; /* убирать подчёркивание у ссылок */
+  user-select: none; /* убирать выделение текста */
+  border-radius: 10px;
+  border: 0;
+  outline: none; /* убирать контур в Mozilla */
+}
+
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  background: rgba(150, 150, 150, 1);
+  border-radius: 16px;
+  width: 58px;
+  height: 32px;
+  vertical-align: middle;
+  transition: background 0.25s;
+}
+.toggle-switch:before, .toggle-switch:after {
+  content: "";
+}
+.toggle-switch:before {
+  position: absolute;
+  display: block;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  top: 4px;
+  left: 5px;
+  transition: left 0.25s;
+}
+
+.toggle-checkbox:checked + .toggle-switch {
+  background: rgba(204, 0, 75, 1);
+}
+.toggle-checkbox:checked + .toggle-switch:before {
+  left: 29px;
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+.toggle-label {
+  margin-left: 10px;
+}

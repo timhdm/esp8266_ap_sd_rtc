@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ESP8266</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <!-- <link rel="stylesheet" href="css/font-awesome.min.css" /> 
+    <script
+      src="https://kit.fontawesome.com/30832b9e8a.js"
+      crossorigin="anonymous"
+    ></script>-->
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="headcontainer" style="font-size: 2rem">ESP8266</div>
+    <div class="headcontainer">
+      <a href="/settings" type="button" class="headbutton">
+        <i class="fa fa-wrench"></i>
+      </a>
+    </div>
+    <div id="time">Mon Jan 00 00:00:00 1900</div>
+    <h2>%BOARDNAME%</h2>
+    <div id="pins">[No Data]</div><br>
+    
+    <table align="center" border="0">
+      <tr>
+          <td>
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D0" onclick="toggleCheckbox(tdis)" type="checkbox" %D0_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D0</span>
+            </label>
+          </td>
+          <td>
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D1" onclick="toggleCheckbox(tdis)" type="checkbox" %D1_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D1</span>
+            </label>
+          </td>
+      </tr>
+      <tr>
+          <td>
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D2" onclick="toggleCheckbox(this)" type="checkbox" %D2_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D2</span>
+            </label>
+          </td>
+          <td>
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D3" onclick="toggleCheckbox(this)" type="checkbox" %D3_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D3</span>
+            </label>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="2">
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D4" onclick="toggleCheckbox(this)" type="checkbox" %D4_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D4</span>
+            </label>
+      
+          </td>
+      </tr>
+      <tr>
+          <td>
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D5" onclick="toggleCheckbox(this)" type="checkbox" %D5_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D5</span>
+            </label>
+          </td>
+          <td>
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D6" onclick="toggleCheckbox(this)" type="checkbox" %D6_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D6</span>
+            </label>
+          </td>
+      </tr>
+      <tr>
+          <td>
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D7" onclick="toggleCheckbox(this)" type="checkbox" %D7_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D7</span>
+            </label>  
+          </td>
+          <td>
+            <label class="toggle">
+              <input class="toggle-checkbox" id="D8" onclick="toggleCheckbox(this)" type="checkbox" %D8_CHECKED%>
+              <div class="toggle-switch"></div>
+              <span class="toggle-label">D8</span>
+            </label>
+          </td>
+      </tr>
+  </table>
+
+    <script src="script.js"></script>
+  </body>
+</html>
