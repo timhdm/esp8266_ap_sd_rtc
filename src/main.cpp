@@ -54,9 +54,7 @@ void loop() {
 /**
  * Блок инструкций для запуска раз в секунду.
  */
-void triggerOneSecond() {
-  // digitalWrite(D4, !digitalRead(D4));
-}
+void triggerOneSecond() { digitalWrite(D4, !digitalRead(D4)); }
 
 String getSsid() {
   String ssid = preferences.getString("ssid", "NONE");
@@ -69,12 +67,30 @@ String getSsid() {
   return ssid;
 }
 
-void listFiles() {
-  Serial.println(F("Список файлов в LittleFS:"));
-
-  Dir dir = LittleFS.openDir("/");
+void listDir(String path, int count = 0) {
+  Dir dir = LittleFS.openDir(path);
 
   while (dir.next()) {
-    Serial.println("* " + dir.fileName());
+    String fileName = dir.fileName();
+    File file = dir.openFile("r");
+
+    String divider = "";
+    for (int i = 0; i < count; i++) {
+      divider += "*";
+    }
+
+    if (file.isDirectory()) {
+      Serial.println(divider + F("[DIR] ") + fileName);
+      listDir(fileName, count + 1);
+    } else {
+      Serial.println(divider + F("[FILE] ") + fileName);
+    }
+
+    file.close();
   }
+}
+
+void listFiles() {
+  Serial.println(F("LittleFS:"));
+  listDir("/");  // Старт с корневой директории
 }

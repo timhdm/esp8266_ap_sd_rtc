@@ -78,16 +78,27 @@ td {
 }
 
 .headbutton {
+  vertical-align: middle;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
   color: rgba(255, 255, 255, 1); /* цвет текста */
   background-color: rgba(204, 0, 75, 1); /* фон кнопки */
-  font-size: 1.4rem;
-  padding: 0.45rem 0.5rem; /* отступ от текста */
-  margin-left: 0.5rem;
+  font-size: 1rem;
+  padding: 0.5rem 0.5rem; /* отступ от текста */
+  margin-left: 0.65rem;
   text-decoration: none; /* убирать подчёркивание у ссылок */
   user-select: none; /* убирать выделение текста */
   border-radius: 10px;
   border: 0;
   outline: none; /* убирать контур в Mozilla */
+}
+
+.icon {
+  vertical-align: sub;
+}
+
+.icon {
+  stroke: white;
 }
 
 .toggle {
