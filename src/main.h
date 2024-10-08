@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <DNSServer.h>
 #include <GyverTimer.h>
-#include <TSettings.h>
+#include <Preferences.h>
 
 #include "TPin.h"
 #include "TTime.h"

@@ -11,7 +11,7 @@
 #include <ESPAsyncWebServer.h>
 #include <ElegantOTA.h>
 #include <LittleFS.h>
-#include <TSettings.h>
+#include <Preferences.h>
 
 #include "TPin.h"
 #include "TTime.h"
@@ -19,7 +19,7 @@
 // main.h
 extern TTime timeNow;
 extern TPin pin;
-extern TSettings settings;
+extern Preferences preferences;
 
 class TWeb {
  public:

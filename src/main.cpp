@@ -5,11 +5,13 @@ GTimer timerOneSecond(MS);
 struct tm timeStructureNow;
 TWeb web;
 TTime timeNow;
-TSettings settings;
+Preferences preferences;
 
 void setup() {
   Serial.begin(115200);
   Serial.println("\nInitializing...");
+
+  preferences.begin("esp8266");
 
   if (LittleFS.begin()) {
     listFiles();
@@ -57,12 +59,12 @@ void triggerOneSecond() {
 }
 
 String getSsid() {
-  String ssid = settings.getValue("ssid").c_str();
+  String ssid = preferences.getString("ssid", "NONE");
   if (ssid == "NONE") {
     String suffix = WiFi.macAddress();
     suffix.replace(":", "");
     ssid = "ESP8266_" + suffix.substring(suffix.length() - 4);
-    settings.setValue("ssid", ssid.c_str());
+    preferences.putString("ssid", ssid);
   }
   return ssid;
 }
