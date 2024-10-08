@@ -1,5 +1,4 @@
-#ifndef ESP8266_BASE_V2_TWEB_H_
-#define ESP8266_BASE_V2_TWEB_H_
+#pragma once
 
 // https://github.com/esphome/ESPAsyncWebServer
 
@@ -18,7 +17,7 @@
 
 // main.h
 extern TTime timeNow;
-extern TPin pin;
+extern TPin pins;
 extern Preferences preferences;
 
 class TWeb {
@@ -33,5 +32,3 @@ class TWeb {
   static String processor(const String& var);
   static void notFound(AsyncWebServerRequest* request);
 };
-
-#endif  // ESP8266_BASE_V2_TWEB_H_

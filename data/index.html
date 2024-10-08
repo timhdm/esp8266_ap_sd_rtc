@@ -13,7 +13,7 @@
   <body>
     <div class="headcontainer" style="font-size: 2rem">%BOARDNAME%</div>
     <br><a href="/settings" type="button" class="headbutton">Settings</a><br><br>
-    <div id="time">Mon Jan 00 00:00:00 1900</div>
+    <div id="time">00:00:00</div>
     <br>
     <div id="pins">[No Data]</div><br>
     
@@ -21,14 +21,14 @@
       <tr>
           <td>
             <label class="toggle">
-              <input class="toggle-checkbox" id="D0" onclick="toggleCheckbox(tdis)" type="checkbox" %D0_CHECKED%>
+              <input class="toggle-checkbox" id="D0" onclick="toggleCheckbox(this)" type="checkbox" %D0_CHECKED%>
               <div class="toggle-switch"></div>
               <span class="toggle-label">D0</span>
             </label>
           </td>
           <td>
             <label class="toggle">
-              <input class="toggle-checkbox" id="D1" onclick="toggleCheckbox(tdis)" type="checkbox" %D1_CHECKED%>
+              <input class="toggle-checkbox" id="D1" onclick="toggleCheckbox(this)" type="checkbox" %D1_CHECKED%>
               <div class="toggle-switch"></div>
               <span class="toggle-label">D1</span>
             </label>

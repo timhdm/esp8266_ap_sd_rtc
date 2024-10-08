@@ -85,7 +85,8 @@ td {
   background-color: rgba(204, 0, 75, 1); /* фон кнопки */
   font-size: 1rem;
   padding: 0.5rem 0.5rem; /* отступ от текста */
-  margin-left: 0.65rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   text-decoration: none; /* убирать подчёркивание у ссылок */
   user-select: none; /* убирать выделение текста */
   border-radius: 10px;
