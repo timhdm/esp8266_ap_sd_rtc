@@ -19,7 +19,7 @@
 // main.h
 extern TTime timeNow;
 extern TPin pin;
-TSettings settings;
+extern TSettings settings;
 
 class TWeb {
  public:

@@ -17,7 +17,6 @@ void setup() {
     Serial.println(F("*FS: An Error has occurred while mounting LittleFS."));
   }
 
-  preferences.begin("my-app");
   TPin::initPins();
 
   String ssid = getSsid();
@@ -58,12 +57,12 @@ void triggerOneSecond() {
 }
 
 String getSsid() {
-  String ssid = settings.getString("ssid", String(0));
-  if (ssid == "0") {
+  String ssid = settings.getValue("ssid").c_str();
+  if (ssid == "NONE") {
     String suffix = WiFi.macAddress();
     suffix.replace(":", "");
     ssid = "ESP8266_" + suffix.substring(suffix.length() - 4);
-    setings.putString("ssid", ssid);
+    settings.setValue("ssid", ssid.c_str());
   }
   return ssid;
 }
@@ -73,9 +72,7 @@ void listFiles() {
 
   Dir dir = LittleFS.openDir("/");
 
-  Serial.println(F("--- LittleFS files: ---"));
   while (dir.next()) {
-    Serial.println(dir.fileName());
+    Serial.println("* " + dir.fileName());
   }
-  Serial.println(F("-----------------------"));
 }

@@ -1,25 +1,4 @@
-#pragma once
-#include <Arduino.h>
-#include <LittleFS.h>
-
-#include <map>
-
-// Класс TSettings для работы с настройками
-class TSettings {
- public:
-  TSettings();  // Конструктор, который считывает настройки из файла при
-                // создании объекта
-  String getValue(const String &key,
-                  const String &defaultValue);  // Получение значения по ключу
-  void setValue(const String &key,
-                const String &value);  // Установка значения и запись в файл
-
- private:
-  std::map<std::string, std::string> settings;  // Хранение ключ-значение
-  void loadSettings();  // Функция для загрузки настроек из файла
-  void saveSettings();  // Функция для сохранения настроек в файл
-};
-
+#include <TSettings.h>
 // Конструктор: загружаем настройки из файла при создании объекта
 TSettings::TSettings() {
   if (!LittleFS.begin()) {
@@ -31,9 +10,9 @@ TSettings::TSettings() {
 }
 
 // Получаем значение по ключу, если ключа нет — возвращаем значение по умолчанию
-String TSettings::getValue(const String &key, const String &defaultValue) {
-  auto it = settings.find(std::string(
-      key.c_str()));  // Преобразуем key в std::string Ищем ключ в словаре
+String TSettings::getValue(const char *key, const char *defaultValue) {
+  auto it = settings.find(
+      std::string(key));  // Преобразуем key в std::string Ищем ключ в словаре
   if (it != settings.end()) {
     return String(
         it->second.c_str());  // Если ключ найден, возвращаем его значение
@@ -42,9 +21,8 @@ String TSettings::getValue(const String &key, const String &defaultValue) {
 }
 
 // Устанавливаем значение по ключу и записываем изменения в файл
-void TSettings::setValue(const String &key, const String &value) {
-  settings[key.c_str()] =
-      value.c_str();  // Устанавливаем новое значение в словарь
+void TSettings::setValue(const char *key, const char *value) {
+  settings[key] = value;  // Устанавливаем новое значение в словарь
   saveSettings();  // Сохраняем изменения в файл
 }
 

@@ -51,7 +51,7 @@ void TWeb::begin() {
 
 String TWeb::processor(const String &var) {
   String returnString = "";
-  if (var == "BOARDNAME") returnString = preferences.getString("ssid");
+  if (var == "BOARDNAME") returnString = settings.getValue("ssid");
   if (var == "D0_CHECKED") returnString = digitalRead(D0) ? "checked" : "";
   if (var == "D1_CHECKED") returnString = digitalRead(D1) ? "checked" : "";
   if (var == "D2_CHECKED") returnString = digitalRead(D2) ? "checked" : "";
