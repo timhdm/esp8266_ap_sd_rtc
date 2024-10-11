@@ -18,10 +18,10 @@ class TPinStateLog {
 
  public:
   void add(String pin, uint8_t state) { log.push_back(PinState(pin, state)); }
-  String getLast100() {
+  String getLast(const size_t number = 10) {
     String result = "";
 
-    size_t count = log.size() < 100 ? log.size() : 100;
+    size_t count = log.size() < number ? log.size() : number;
 
     for (size_t i = log.size() - count; i < log.size(); ++i) {
       result += "Pin: " + String(log[i].pin) +

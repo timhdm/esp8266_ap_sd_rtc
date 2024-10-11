@@ -147,3 +147,11 @@ td {
 .toggle-label {
   margin-left: 10px;
 }
+
+.toggle-checkbox:disabled + .toggle-switch {
+  background-color: #d3d3d3; 
+}
+
+.toggle-checkbox:disabled + .toggle-switch + .toggle-label {
+  color: #a0a0a0;
+}

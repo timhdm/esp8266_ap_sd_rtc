@@ -16,7 +16,11 @@ void TWeb::begin() {
   });
 
   server.on("/pins", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", pins.getPinsStatusHtml());
+    request->send(200, "text/plane", pins.getPinsStatus(true));
+  });
+
+  server.on("/log", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plane", pins.getPinStateLog(10, true));
   });
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -51,6 +55,7 @@ void TWeb::begin() {
 
 String TWeb::processor(const String &var) {
   String returnString = "";
+
   if (var == "BOARDNAME")
     returnString = preferences.getString("ssid");
   else if (var == "D0_CHECKED")
@@ -74,6 +79,7 @@ String TWeb::processor(const String &var) {
 
   if (returnString == "checked")
     returnString += pins.isInput(var.substring(0, 2)) ? " disabled" : "";
+
   return returnString;
 }
 

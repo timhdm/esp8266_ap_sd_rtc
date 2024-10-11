@@ -1,6 +1,7 @@
 setInterval(function () {
   refreshValue("time");
   refreshValue("pins");
+  refreshValue("log");
 }, 1000);
 
 function refreshValue(elementid) {
@@ -17,8 +18,10 @@ function refreshValue(elementid) {
 function toggleCheckbox(element) {
   console.log("toggleCheckbox: " + element.id);
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/set?element=" + element.id + "&value=" + (element.checked ? "1" : "0"), true);
+  xhr.open(
+    "GET",
+    "/set?element=" + element.id + "&value=" + (element.checked ? "1" : "0"),
+    true
+  );
   xhr.send();
 }
-
-

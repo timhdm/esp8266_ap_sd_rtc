@@ -29,13 +29,6 @@ uint8_t TPin::setPin(String pin, uint8_t value) {
   return returnError;
 }
 
-/**
- * @brief Convert a string pin name to a numeric pin value.
- * @details This function takes a string pin name (e.g. "D0", "D1", etc.) and
- *          returns the numeric value of the pin (e.g. 0, 1, etc.).
- * @param pin - string pin name (e.g. "D0", "D1", etc.)
- * @return numeric value of the pin, or 255 if the pin is not found.
- */
 uint8_t TPin::convertPin(String pin) {
   static const std::map<String, uint8_t> wemosD1PinMap = {
       {"D0", D0}, {"D1", D1}, {"D2", D2}, {"D3", D3}, {"D4", D4},
@@ -44,12 +37,6 @@ uint8_t TPin::convertPin(String pin) {
   return it != wemosD1PinMap.end() ? it->second : 255;
 }
 
-/**
- * @brief Return true if pin is an output pin, false otherwise.
- * @details D0, D3, D4 and D8 are the output pins.
- * @param pin - name of pin, e.g. "D0", "D2", ...
- * @return true if pin is an output pin, false otherwise
- */
 boolean TPin::isOutput(String pin) {
   static const std::map<String, uint8_t> wemosD1OutputPinMap = {
       {"D0", D0}, {"D3", D3}, {"D4", D4}, {"D8", D8}};
@@ -59,40 +46,25 @@ boolean TPin::isOutput(String pin) {
   return it == wemosD1OutputPinMap.end() ? false : true;
 }
 
-/**
- * @brief Return current state of all pins as string.
- * @details This is useful for displaying the current state of all pins on a
- *          serial console or a web page.
- * @return Current state of all pins as string.
- */
-String TPin::getPinsStatusString() {
-  return "[A0:" + String(analogRead(A0)) + "]\n" +
-         "[D0:" + String(digitalRead(D0)) + " D1:" + String(digitalRead(D1)) +
-         " D2:" + String(digitalRead(D2)) + "]\n" +
-         "[D3:" + String(digitalRead(D3)) + " D4:" + String(digitalRead(D4)) +
-         " D5:" + String(digitalRead(D5)) + "]\n" +
-         "[D6:" + String(digitalRead(D6)) + " D7:" + String(digitalRead(D7)) +
-         " D8:" + String(digitalRead(D8)) + "]";
+String TPin::getPinsStatus(const bool html) {
+  String result =
+      "[A0:" + String(analogRead(A0)) + "]\n" +
+      "[D0:" + String(digitalRead(D0)) + " D1:" + String(digitalRead(D1)) +
+      " D2:" + String(digitalRead(D2)) + "]\n" +
+      "[D3:" + String(digitalRead(D3)) + " D4:" + String(digitalRead(D4)) +
+      " D5:" + String(digitalRead(D5)) + "]\n" +
+      "[D6:" + String(digitalRead(D6)) + " D7:" + String(digitalRead(D7)) +
+      " D8:" + String(digitalRead(D8)) + "]";
+
+  return html ? replaceLineBreakerToHtml(result) : result;
 }
 
-/**
- * @brief Return current state of all pins as HTML string.
- * @details This is useful for displaying the current state of all pins on a
- *          web page.
- * @return Current state of all pins as HTML string.
- */
-String TPin::getPinsStatusHtml() {
-  String result = getPinsStatusString();
-  result.replace("\n", "<br>");
-  return result;
+String TPin::getPinStateLog(const int number, const bool html) {
+  return html ? replaceLineBreakerToHtml(pinStateLog.getLast(number))
+              : pinStateLog.getLast(number);
 }
 
-/**
- * @brief Set the value of the specified pin.
- * @details This function sets the value of the specified pin to the specified
- *          value. If the pin is not an output pin, a non-zero error value is
- *          returned.
- * @param pin - name of pin, e.g. "D0", "D2", ...
- * @param value - value to set the pin to (0 or 1)
- * @return 0 if successful, 1 if pin is not an output pin, 2 if pin not found
- */
+String TPin::replaceLineBreakerToHtml(String input) {
+  input.replace("\n", "<br>");
+  return input;
+}
