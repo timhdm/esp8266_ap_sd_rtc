@@ -21,10 +21,10 @@ void TLittleFS::list_dir(String path, int count) {
     }
 
     if (file.isDirectory()) {
-      Serial.println(divider + F("[DIR] ") + fileName);
+      Serial.println(divider + fileName + F(" (d)"));
       list_dir(fileName, count + 1);
     } else {
-      Serial.println(divider + F("[FILE] ") + fileName);
+      Serial.println(divider + fileName + F(" (f)"));
     }
 
     file.close();

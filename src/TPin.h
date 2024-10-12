@@ -19,6 +19,7 @@ class TPinLog {
   };
 
  public:
+  void begin();
   void append(String pin, uint8_t state);
   String fetch(const size_t number = 1);
 
@@ -34,7 +35,7 @@ class TPinLog {
 
 class TPin {
  public:
-  TPin();
+  void begin();
   uint8_t convert_string_pin(String pin);
   String get_pins_status(const bool html = false);
   String get_pins_log(const int rows = 10, const bool html = false);

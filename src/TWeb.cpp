@@ -1,7 +1,7 @@
 #include "TWeb.h"
 
 void TWeb::begin() {
-  Serial.print(F("*WEB: Server initializing "));
+  Serial.print(F("[WEB] Server initializing "));
 
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(LittleFS, "/style.css", "text/css");
@@ -33,12 +33,13 @@ void TWeb::begin() {
       uint8_t pinValue = request->hasParam("value")
                              ? request->getParam("value")->value().toInt()
                              : 0;
-
-      Serial.print("*WEB: GET[" + String(request->args()) +
-                   "]: " + request->getParam("element")->value() + ", " +
-                   request->getParam("value")->value());
-      Serial.println(pins.set_pin(webElement, pinValue) == 0 ? " -> OK"
-                                                             : " -> ERROR");
+      String value =
+          request->getParam("value")->value() == "1" ? "ON" : "OFF";  //
+      String status =
+          pins.set_pin(webElement, pinValue) == 0 ? " -> OK" : " -> ERROR";
+      Serial.println("*WEB: GET[" + String(request->args()) +
+                     "]: " + request->getParam("element")->value() + " = " +
+                     value + status);
     }
     request->send(200, "text/plain", "OK");
   });

@@ -8,12 +8,13 @@
 ////////////////////////////////////////////////
 //                   TPIN                     //
 ////////////////////////////////////////////////
-TPin::TPin() {
+void TPin::begin() {
   for (uint8_t i = 0; i < 8; i++) {
     is_output("D" + String(i))
         ? pinMode(convert_string_pin("D" + String(i)), OUTPUT)
         : pinMode(convert_string_pin("D" + String(i)), INPUT);
   }
+  this->pinlog.begin();
 }
 
 uint8_t TPin::get_pin(String pin) {
@@ -93,6 +94,8 @@ String TPinLog::PinState::to_string() {
 ////////////////////////////////////////////////
 //                  TPINLOG                   //
 ////////////////////////////////////////////////
+void TPinLog::begin() { sd_log_file.begin(); }
+
 String TPinLog::fetch(const size_t number) {
   String result = "";
 
