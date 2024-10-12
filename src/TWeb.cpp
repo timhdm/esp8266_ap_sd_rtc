@@ -12,15 +12,15 @@ void TWeb::begin() {
   });
 
   server.on("/time", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", timeNow.getOnlineString());
+    request->send(200, "text/plane", time_now.fetch_online_string());
   });
 
   server.on("/pins", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", pins.getPinsStatus(true));
+    request->send(200, "text/plane", pins.get_pins_status(true));
   });
 
   server.on("/log", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", pins.getPinStateLog(10, true));
+    request->send(200, "text/plane", pins.get_pins_log(10, true));
   });
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -37,8 +37,8 @@ void TWeb::begin() {
       Serial.print("*WEB: GET[" + String(request->args()) +
                    "]: " + request->getParam("element")->value() + ", " +
                    request->getParam("value")->value());
-      Serial.println(pins.setPin(webElement, pinValue) == 0 ? " -> OK"
-                                                            : " -> ERROR");
+      Serial.println(pins.set_pin(webElement, pinValue) == 0 ? " -> OK"
+                                                             : " -> ERROR");
     }
     request->send(200, "text/plain", "OK");
   });
@@ -59,26 +59,26 @@ String TWeb::processor(const String &var) {
   if (var == "BOARDNAME")
     returnString = preferences.getString("ssid");
   else if (var == "D0_CHECKED")
-    returnString = pins.getPin("D0") ? "checked" : "";
+    returnString = pins.get_pin("D0") ? "checked" : "";
   else if (var == "D1_CHECKED")
-    returnString = pins.getPin("D1") ? "checked" : "";
+    returnString = pins.get_pin("D1") ? "checked" : "";
   else if (var == "D2_CHECKED")
-    returnString = pins.getPin("D2") ? "checked" : "";
+    returnString = pins.get_pin("D2") ? "checked" : "";
   else if (var == "D3_CHECKED")
-    returnString = pins.getPin("D3") ? "checked" : "";
+    returnString = pins.get_pin("D3") ? "checked" : "";
   else if (var == "D4_CHECKED")
-    returnString = pins.getPin("D4") ? "checked" : "";
+    returnString = pins.get_pin("D4") ? "checked" : "";
   else if (var == "D5_CHECKED")
-    returnString = pins.getPin("D5") ? "checked" : "";
+    returnString = pins.get_pin("D5") ? "checked" : "";
   else if (var == "D6_CHECKED")
-    returnString = pins.getPin("D6") ? "checked" : "";
+    returnString = pins.get_pin("D6") ? "checked" : "";
   else if (var == "D7_CHECKED")
-    returnString = pins.getPin("D7") ? "checked" : "";
+    returnString = pins.get_pin("D7") ? "checked" : "";
   else if (var == "D8_CHECKED")
-    returnString = pins.getPin("D8") ? "checked" : "";
+    returnString = pins.get_pin("D8") ? "checked" : "";
 
   if (returnString == "checked")
-    returnString += pins.isInput(var.substring(0, 2)) ? " disabled" : "";
+    returnString += pins.is_input(var.substring(0, 2)) ? " disabled" : "";
 
   return returnString;
 }

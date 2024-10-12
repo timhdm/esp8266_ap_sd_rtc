@@ -2,13 +2,13 @@
 
 void TLittleFS::begin() {
   if (LittleFS.begin()) {
-    listFiles();
+    list_files();
   } else {
     Serial.println(F("*FS: An Error has occurred while mounting LittleFS."));
   }
 }
 
-void TLittleFS::listDir(String path, int count) {
+void TLittleFS::list_dir(String path, int count) {
   Dir dir = LittleFS.openDir(path);
 
   while (dir.next()) {
@@ -22,7 +22,7 @@ void TLittleFS::listDir(String path, int count) {
 
     if (file.isDirectory()) {
       Serial.println(divider + F("[DIR] ") + fileName);
-      listDir(fileName, count + 1);
+      list_dir(fileName, count + 1);
     } else {
       Serial.println(divider + F("[FILE] ") + fileName);
     }
@@ -31,7 +31,7 @@ void TLittleFS::listDir(String path, int count) {
   }
 }
 
-void TLittleFS::listFiles() {
+void TLittleFS::list_files() {
   Serial.println(F("LittleFS:"));
-  listDir("/");  // Старт с корневой директории
+  list_dir("/");  // Старт с корневой директории
 }

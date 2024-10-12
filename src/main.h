@@ -9,6 +9,7 @@
 
 #include "TLittleFS.h"
 #include "TPin.h"
+#include "TSdCard.h"
 #include "TTime.h"
 #include "TWeb.h"
 

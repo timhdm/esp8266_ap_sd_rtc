@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 
-#include <map>
+#include <vector>
 
 #include "TSdCard.h"
 #include "TTime.h"
@@ -30,21 +30,4 @@ class TPinLog {
   String sd_log_file_name;
 
   String printTimestamp(time_t timestamp);
-};
-
-class TPin {
- public:
-  TPin();
-  uint8_t convert_string_pin(String pin);
-  String get_pins_status(const bool html = false);
-  String get_pins_log(const int rows = 10, const bool html = false);
-  uint8_t get_pin(String pin);
-  uint8_t set_pin(String pin, uint8_t value);
-  boolean is_output(String pin);
-  boolean is_input(String pin) { return !is_output(pin); };
-
- private:
-  TPinLog pinlog;
-
-  String replace_line_breaker_to_html(String input);
 };

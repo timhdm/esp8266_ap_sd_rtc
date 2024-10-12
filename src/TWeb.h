@@ -1,3 +1,9 @@
+/**
+ * @file TWeb.h
+ * @brief Web server functions
+ * @version 0.1.0
+ * @date 12-10-2024
+ */
 #pragma once
 
 // https://github.com/esphome/ESPAsyncWebServer
@@ -16,7 +22,7 @@
 #include "TTime.h"
 
 // main.h
-extern TTime timeNow;
+extern TTime time_now;
 extern TPin pins;
 extern Preferences preferences;
 
