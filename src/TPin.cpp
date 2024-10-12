@@ -51,7 +51,7 @@ boolean TPin::is_output(String pin) {
 
   auto it = wemosD1OutputPinMap.find(pin);
 
-  return it == wemosD1OutputPinMap.end() ? false : true;
+  return it != wemosD1OutputPinMap.end();
 }
 
 String TPin::get_pins_status(const bool html) {

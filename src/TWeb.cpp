@@ -78,7 +78,7 @@ String TWeb::processor(const String &var) {
   else if (var == "D8_CHECKED")
     returnString = pins.get_pin("D8") ? "checked" : "";
 
-  if (returnString == "checked")
+  if (var.substring(0, 1) == "D")
     returnString += pins.is_input(var.substring(0, 2)) ? " disabled" : "";
 
   return returnString;
