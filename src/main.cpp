@@ -21,7 +21,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("\n[SYS] Initializing...");
 
-  Wire.begin(D1, D2);
+  Wire.begin(D2, D1);
   time_now.begin();
 
   preferences.begin("esp8266");
