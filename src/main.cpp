@@ -5,7 +5,16 @@ TTime time_now;
 TWeb web;
 Preferences preferences;
 TLittleFS little_fs;
-TPin pins;
+TPin pins({PinStatus::OUTPUT_PIN,     // D0
+           PinStatus::UNDEFINED_PIN,  // D1
+           PinStatus::UNDEFINED_PIN,  // D2
+           PinStatus::OUTPUT_PIN,     // D3
+           PinStatus::OUTPUT_PIN,     // D4
+           PinStatus::UNDEFINED_PIN,  // D5
+           PinStatus::UNDEFINED_PIN,  // D6
+           PinStatus::UNDEFINED_PIN,  // D7
+           PinStatus::UNDEFINED_PIN}  // D8
+);
 GTimer timer_one_second(MS, 1000);
 
 void setup() {

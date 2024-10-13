@@ -7,6 +7,7 @@
 #include "TTime.h"
 
 extern TTime time_now;
+enum PinStatus { INPUT_PIN, OUTPUT_PIN, UNDEFINED_PIN };
 
 class TPinLog {
   struct PinState {
@@ -35,6 +36,7 @@ class TPinLog {
 
 class TPin {
  public:
+  TPin(std::vector<PinStatus> pins_status);
   void begin();
   uint8_t convert_string_pin(String pin);
   String get_pins_status(const bool html = false);
@@ -45,7 +47,10 @@ class TPin {
   boolean is_input(String pin) { return !is_output(pin); };
 
  private:
+  std::vector<PinStatus> pins_status;
+
   TPinLog pinlog;
 
   String replace_line_breaker_to_html(String input);
+  bool is_valid_pin(String pin);
 };

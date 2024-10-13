@@ -5,14 +5,24 @@
  * Выводы могут использоваться для получения сигнала (INPUT): D1, D2, D5, D6, D7
  */
 
+TPin::TPin(std::vector<PinStatus> pins_status) : pins_status(pins_status) {}
+
 ////////////////////////////////////////////////
 //                   TPIN                     //
 ////////////////////////////////////////////////
 void TPin::begin() {
-  for (uint8_t i = 0; i < 8; i++) {
-    is_output("D" + String(i))
-        ? pinMode(convert_string_pin("D" + String(i)), OUTPUT)
-        : pinMode(convert_string_pin("D" + String(i)), INPUT);
+  for (size_t i = 0; i < pins_status.size(); i++) {
+    switch (pins_status[i]) {
+      case PinStatus::INPUT_PIN:
+        pinMode(convert_string_pin("D" + String(i)), INPUT);
+        break;
+      case PinStatus::OUTPUT_PIN:
+        pinMode(convert_string_pin("D" + String(i)), OUTPUT);
+        break;
+
+      default:
+        break;
+    }
   }
   this->pinlog.begin();
 }
@@ -37,21 +47,38 @@ uint8_t TPin::set_pin(String pin, uint8_t value) {
   return returnError;
 }
 
+boolean TPin::is_output(String pin) {
+  String status = "";
+  if (is_valid_pin(pin)) {
+    PinStatus pin_number = pins_status[pin.substring(1).toInt()];
+    switch (pin_number) {
+      case PinStatus::OUTPUT_PIN:
+        status = " is output.";
+        break;
+      case PinStatus::INPUT_PIN:
+        status = " is input.";
+        break;
+      default:
+        status = " is undefined.";
+        break;
+    }
+    Serial.println("[DBG] Pin " + pin + status);
+
+    if (pin_number == PinStatus::OUTPUT_PIN) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 uint8_t TPin::convert_string_pin(String pin) {
+  is_valid_pin(pin);
   static const std::map<String, uint8_t> wemosD1PinMap = {
       {"D0", D0}, {"D1", D1}, {"D2", D2}, {"D3", D3}, {"D4", D4},
       {"D5", D5}, {"D6", D6}, {"D7", D7}, {"D8", D8}};
   auto it = wemosD1PinMap.find(pin);
   return it != wemosD1PinMap.end() ? it->second : 255;
-}
-
-boolean TPin::is_output(String pin) {
-  static const std::map<String, uint8_t> wemosD1OutputPinMap = {
-      {"D0", D0}, {"D3", D3}, {"D4", D4}, {"D8", D8}};
-
-  auto it = wemosD1OutputPinMap.find(pin);
-
-  return it != wemosD1OutputPinMap.end();
 }
 
 String TPin::get_pins_status(const bool html) {
@@ -75,6 +102,35 @@ String TPin::get_pins_log(const int number, const bool html) {
 String TPin::replace_line_breaker_to_html(String input) {
   input.replace("\n", "<br>");
   return input;
+}
+
+bool TPin::is_valid_pin(String pin) {
+  bool error = false;
+  if (pin.length() < 2 || pin.length() > 3) {
+    error = true;
+  } else {
+    if (pin[0] != 'D') {
+      error = true;
+    } else {
+      switch (pin.length()) {
+        case 2:
+          error = isdigit(pin[1]) ? false : true;
+          break;
+        case 3:
+          error = isdigit(pin[1]) && isdigit(pin[2]) ? false : true;
+          break;
+
+        default:
+          break;
+      }
+    }
+  }
+
+  if (error) {
+    Serial.println("[DBG] Invalid pin name!");
+  }
+
+  return !error;
 }
 
 ////////////////////////////////////////////////
