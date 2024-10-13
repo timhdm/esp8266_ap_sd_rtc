@@ -21,6 +21,9 @@ void setup() {
   Serial.begin(115200);
   Serial.println("\n[SYS] Initializing...");
 
+  Wire.begin(D1, D2);
+  time_now.begin();
+
   preferences.begin("esp8266");
   little_fs.begin();
   pins.begin();
@@ -37,13 +40,14 @@ void setup() {
 void loop() {
   if (timer_one_second.isReady()) triggerOneSecond();
 }
+
 ////////////////////////////////////////////////
 //                 FUNCTIONS                  //
 ////////////////////////////////////////////////
 /**
  * Блок инструкций для запуска раз в секунду.
  */
-void triggerOneSecond() { digitalWrite(D4, !digitalRead(D4)); }
+void triggerOneSecond() {}
 
 String getSsid() {
   String ssid = preferences.getString("ssid", "NONE");

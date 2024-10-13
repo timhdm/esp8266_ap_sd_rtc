@@ -1,9 +1,12 @@
 #include "TTime.h"
 
-time_t TTime::fetch_time_now_unix() {
-  update();
-  return time_now_unix;
+void TTime::begin() {
+  rtc.Begin();
+  time_now_unix = rtc.GetDateTime().Unix32Time();
+  start_time = time_now_unix;
 }
+
+time_t TTime::fetch_time_now_unix() { return update(); }
 
 /**
  * Returns current time as a string in the format returned by asctime() function
@@ -15,6 +18,7 @@ String TTime::fetch_time_now_string() {
 }
 
 String TTime::fetch_time_now_string_short() {
+  update();
   char buffer[100];
   std::strftime(buffer, sizeof(buffer), "%d-%m-%Y %H:%M:%S",
                 &time_now_structure);
@@ -25,10 +29,7 @@ String TTime::fetch_time_now_string_short() {
  * Returns the number of seconds that have elapsed since the device
  * started.
  */
-time_t TTime::fetch_online_seconds() {
-  update();
-  return time_now_unix - start_time;
-}
+time_t TTime::fetch_online_seconds() { return update() - start_time; }
 
 /**
  * Returns a string representation of the elapsed time since the device
@@ -49,10 +50,8 @@ String TTime::fetch_online_string() {
 /**
  * Обновление структуры c текущим временем.
  */
-void TTime::update() {
-  time(&time_now_unix);
+time_t TTime::update() {
+  time_now_unix = rtc.GetDateTime().Unix32Time();
   localtime_r(&time_now_unix, &time_now_structure);
-  if (start_time == 0 && time_now_unix > 1700000000) {
-    start_time = time_now_unix;
-  }
+  return time_now_unix;
 }

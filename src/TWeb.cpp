@@ -12,6 +12,10 @@ void TWeb::begin() {
   });
 
   server.on("/time", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plane", time_now.fetch_time_now_string());
+  });
+
+  server.on("/online", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/plane", time_now.fetch_online_string());
   });
 

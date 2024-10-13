@@ -155,3 +155,14 @@ td {
 .toggle-checkbox:disabled + .toggle-switch + .toggle-label {
   color: #a0a0a0;
 }
+
+#log {
+  font-size: 12px; /* Уменьшенный размер шрифта */
+  color: #D3D3D3; /* Светло-серый цвет */
+  background-color: #F0F0F0; /* Дополнительный светлый фон для выделения */
+  padding: 10px; /* Отступы вокруг текста */
+  border: 1px solid #CCCCCC; /* Светло-серая рамка */
+  border-radius: 5px; /* Закругленные углы */
+  margin-top: 10px; /* Отступ сверху */
+  text-align: left;
+}

@@ -4,6 +4,7 @@
 #include <DNSServer.h>
 #include <GyverTimer.h>
 #include <Preferences.h>
+#include <Wire.h>
 
 #include <vector>
 
