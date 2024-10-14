@@ -15,6 +15,30 @@ void TWeb::begin() {
     request->send(200, "text/plane", time_now.fetch_time_now_string());
   });
 
+  server.on("/time-set", HTTP_GET, [](AsyncWebServerRequest *request) {
+    size_t paramsCount = request->params();
+    // Перебираем все параметры и выводим их
+    for (size_t i = 0; i < paramsCount; i++) {
+      const AsyncWebParameter *param = request->getParam(i);
+      Serial.print("[WEB] Param: ");
+      Serial.print(param->name());
+      Serial.print(" = ");
+      Serial.println(param->value());
+    }
+
+    String year = request->getParam("year")->value();
+    String month = request->getParam("month")->value();
+    String day = request->getParam("day")->value();
+    String hours = request->getParam("hours")->value();
+    String minutes = request->getParam("minutes")->value();
+    if (year != "" && month != "" && day != "" && hours != "" &&
+        minutes != "") {
+      time_now.set_time(RtcDateTime(year.toInt(), month.toInt(), day.toInt(),
+                                    hours.toInt(), minutes.toInt(), 0));
+    }
+    request->send(200, "text/plain", "OK");
+  });
+
   server.on("/online", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/plane", time_now.fetch_online_string());
   });
@@ -28,7 +52,12 @@ void TWeb::begin() {
   });
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(LittleFS, "/index.html", String(), false, processor);
+    request->send(LittleFS, "/index.html", String(), false, processor_index);
+  });
+
+  server.on("/settings", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/settings.html", String(), false,
+                  processor_settings);
   });
 
   server.on("/set", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -57,7 +86,7 @@ void TWeb::begin() {
   Serial.println(F("[OK]"));
 }
 
-String TWeb::processor(const String &var) {
+String TWeb::processor_index(const String &var) {
   String returnString = "";
 
   if (var == "BOARDNAME")
@@ -83,6 +112,14 @@ String TWeb::processor(const String &var) {
 
   if (var.substring(0, 1) == "D")
     returnString += pins.is_input(var.substring(0, 2)) ? " disabled" : "";
+
+  return returnString;
+}
+
+String TWeb::processor_settings(const String &var) {
+  String returnString = "";
+
+  if (var == "BOARDNAME") returnString = preferences.getString("ssid");
 
   return returnString;
 }

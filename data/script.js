@@ -25,3 +25,28 @@ function toggleCheckbox(element) {
   );
   xhr.send();
 }
+
+function sendTime() {
+  var year = document.getElementById("year").value;
+  var month = document.getElementById("month").value;
+  var day = document.getElementById("day").value;
+  var hours = document.getElementById("hours").value;
+  var minutes = document.getElementById("minutes").value;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open(
+    "GET",
+    "/time-set?year=" +
+      year +
+      "&month=" +
+      month +
+      "&day=" +
+      day +
+      "&hours=" +
+      hours +
+      "&minutes=" +
+      minutes,
+    true
+  );
+  xhr.send();
+}

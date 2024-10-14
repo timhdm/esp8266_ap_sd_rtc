@@ -1,27 +1,42 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ESP8266</title>
+    <title>%BOARDNAME%</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="data:," />
-    <!-- <link rel="stylesheet" href="css/font-awesome.min.css" /> -->
-    <script
-      src="https://kit.fontawesome.com/30832b9e8a.js"
-      crossorigin="anonymous"
-    ></script>
-
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
-    <div class="headcontainer" style="font-size: 2rem">ESP8266</div>
-    <div class="headcontainer">
-      <a href="/" type="button" class="headbutton"
-        ><i class="fa fa-home"></i
-      ></a>
-    </div>
-    %NAMEPLACEHOLDER% %TIMEPLACEHOLDER%
-    <h2>SETTINGS</h2>
-    %MAINSETTINGSPLACEHOLDER%
+    <div class="headcontainer" style="font-size: 1.5rem">%BOARDNAME%</div>
+    <br><a href="/" type="button" class="button">Home</a><br><br>
+    <div id="time">[time]</div>
+    <br>
+    <form id="timeForm">
+      <div class="inline-input">
+          <input type="number" id="day" name="day" min="1" max="31" placeholder="DD" maxlength="2" required>
+          <input type="number" id="month" name="month" min="1" max="12" placeholder="MM" maxlength="2" required>
+          <input type="number" id="year" name="year" min="2000" max="2099" placeholder="YYYY" maxlength="4" required>
+        </div>
+
+        <div class="inline-input">
+
+          <input type="number" id="hours" name="hours" min="0" max="23" placeholder="HH" maxlength="2" required>
+          <input type="number" id="minutes" name="minutes" min="0" max="59" placeholder="MM" maxlength="2" required>
+        </div>
+
+        <button type="button" class="button button-input" onclick="sendTime()">Set time</button>
+        <button type="button" class="button  button-input" onclick="fillCurrentTime()">^</button>
+    </form>
+    <script>
+      function fillCurrentTime() {
+          const now = new Date();
+          document.getElementById('day').value = String(now.getDate()).padStart(2, '0'); // Заполнение дня
+          document.getElementById('month').value = String(now.getMonth() + 1).padStart(2, '0'); // Заполнение месяца (месяцы с 0)
+          document.getElementById('year').value = now.getFullYear(); // Заполнение года
+          document.getElementById('hours').value = String(now.getHours()).padStart(2, '0'); // Заполнение часов
+          document.getElementById('minutes').value = String(now.getMinutes()).padStart(2, '0'); // Заполнение минут
+      }
+  </script>
     <script src="script.js"></script>
   </body>
 </html>

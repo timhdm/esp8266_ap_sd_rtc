@@ -17,6 +17,7 @@
 #include <ElegantOTA.h>
 #include <LittleFS.h>
 #include <Preferences.h>
+#include <RtcDS1307.h>
 
 #include "TPin.h"
 #include "TTime.h"
@@ -35,6 +36,7 @@ class TWeb {
  private:
   AsyncWebServer server;
 
-  static String processor(const String& var);
+  static String processor_index(const String& var);
+  static String processor_settings(const String& var);
   static void notFound(AsyncWebServerRequest* request);
 };

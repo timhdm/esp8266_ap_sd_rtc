@@ -22,6 +22,7 @@ class TTime {
   String fetch_time_now_string_short();
   time_t fetch_online_seconds();
   String fetch_online_string();
+  void set_time(RtcDateTime time);
 
  private:
   RtcDS1307<TwoWire> rtc;
@@ -30,4 +31,5 @@ class TTime {
   time_t start_time;
 
   time_t update();
+  bool wasError(const char* errorTopic = "");
 };

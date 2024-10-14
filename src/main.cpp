@@ -22,9 +22,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("\n[SYS] Initializing...");
 
-  Wire.begin(D2, D1);
   time_now.begin();
-
   preferences.begin("esp8266");
   little_fs.begin();
   sd_card.begin();
