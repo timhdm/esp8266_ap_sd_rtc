@@ -10,7 +10,7 @@ TPin::TPin(std::vector<PinStatus> pins_status) : pins_status(pins_status) {}
 ////////////////////////////////////////////////
 //                   TPIN                     //
 ////////////////////////////////////////////////
-void TPin::begin() {
+void TPin::begin(TSdCard *sd_log_file) {
   for (size_t i = 0; i < pins_status.size(); i++) {
     switch (pins_status[i]) {
       case PinStatus::INPUT_PIN:
@@ -24,7 +24,7 @@ void TPin::begin() {
         break;
     }
   }
-  this->pinlog.begin();
+  this->pin_log.begin(sd_log_file);
 }
 
 uint8_t TPin::get_pin(String pin) {
@@ -39,7 +39,7 @@ uint8_t TPin::set_pin(String pin, uint8_t value) {
     uint8_t pinConvertable = convert_string_pin(pin);
     if (pinConvertable != 255) {
       digitalWrite(pinConvertable, value);
-      pinlog.append(pin, value);
+      pin_log.append(pin, value);
     } else {
       returnError = 2;
     }
@@ -95,8 +95,8 @@ String TPin::get_pins_status(const bool html) {
 }
 
 String TPin::get_pins_log(const int number, const bool html) {
-  return html ? replace_line_breaker_to_html(pinlog.fetch(number))
-              : pinlog.fetch(number);
+  return html ? replace_line_breaker_to_html(pin_log.fetch(number))
+              : pin_log.fetch(number);
 }
 
 String TPin::replace_line_breaker_to_html(String input) {
@@ -143,35 +143,37 @@ String TPinLog::PinState::to_string() {
   struct tm *timeinfo = localtime(&timestamp);
   char time_buffer[80];
   strftime(time_buffer, sizeof(time_buffer), "%d-%m-%Y %H:%M:%S", timeinfo);
-  return String(time_buffer) + " Pin: " + String(pin) + " = " +
+  return String(time_buffer) + " [PIN] " + String(pin) + " = " +
          String(state ? "ON" : "OFF") + "\n";
 }
 
 ////////////////////////////////////////////////
 //                  TPINLOG                   //
 ////////////////////////////////////////////////
-void TPinLog::begin() { sd_log_file.begin(); }
+void TPinLog::begin(TSdCard *sd_log_file) { this->sd_log_file = sd_log_file; }
 
 String TPinLog::fetch(const size_t number) {
   String result = "";
 
-  size_t count = pinLog.size() < number ? pinLog.size() : number;
+  size_t count =
+      pin_log_buffer.size() < number ? pin_log_buffer.size() : number;
 
-  for (auto i = pinLog.size(); i > pinLog.size() - count; --i) {
-    result += pinLog[i - 1].to_string();
+  for (auto i = pin_log_buffer.size(); i > pin_log_buffer.size() - count; --i) {
+    result += pin_log_buffer[i - 1].to_string();
   }
 
   return result;
 }
 
 void TPinLog::append(String pin, uint8_t state) {
-  pinLog.push_back(
+  pin_log_buffer.push_back(
       PinState(pin, state));  // TODO: Хранить не более 10 элементов
-  if (this->sd_log_file_name)
-    this->sd_log_file.append(this->sd_log_file_name, pinLog.back().to_string());
+  if (this->sd_log_file_name && this->sd_log_file != nullptr)
+    this->sd_log_file->append(this->sd_log_file_name,
+                              pin_log_buffer.back().to_string());
 }
 
-String TPinLog::printTimestamp(time_t timestamp) {
+String TPinLog::print_timestamp(time_t timestamp) {
   struct tm *timeinfo = localtime(&timestamp);
   char buffer[80];
   strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);

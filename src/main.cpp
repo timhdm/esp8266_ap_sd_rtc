@@ -5,6 +5,7 @@ TTime time_now;
 TWeb web;
 Preferences preferences;
 TLittleFS little_fs;
+TSdCard sd_card;
 TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::UNDEFINED_PIN,  // D1
            PinStatus::UNDEFINED_PIN,  // D2
@@ -15,7 +16,7 @@ TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::UNDEFINED_PIN,  // D7
            PinStatus::UNDEFINED_PIN}  // D8
 );
-GTimer timer_one_second(MS, 1000);
+GTimer timer_one_minute(MS, 60000);
 
 void setup() {
   Serial.begin(115200);
@@ -26,7 +27,8 @@ void setup() {
 
   preferences.begin("esp8266");
   little_fs.begin();
-  pins.begin();
+  sd_card.begin();
+  pins.begin(&sd_card);
 
   String ssid = getSsid();
   const char* password = "esp12345";  // TODO
@@ -38,7 +40,7 @@ void setup() {
 }
 
 void loop() {
-  if (timer_one_second.isReady()) triggerOneSecond();
+  if (timer_one_minute.isReady()) trigger_one_minute();
 }
 
 ////////////////////////////////////////////////
@@ -47,7 +49,7 @@ void loop() {
 /**
  * Блок инструкций для запуска раз в секунду.
  */
-void triggerOneSecond() {}
+void trigger_one_minute() {}
 
 String getSsid() {
   String ssid = preferences.getString("ssid", "NONE");

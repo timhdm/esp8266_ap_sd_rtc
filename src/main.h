@@ -15,5 +15,5 @@
 #include "TWeb.h"
 
 String getSsid();
-void triggerOneSecond();
+void trigger_one_minute();
 void initPins();
