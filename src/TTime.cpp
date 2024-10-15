@@ -2,15 +2,8 @@
 bool TTime::wasError(const char* errorTopic) {
   uint8_t error = this->rtc.LastError();
   if (error != 0) {
-    // we have a communications error
-    // see
-    // https://www.arduino.cc/reference/en/language/functions/communication/wire/endtransmission/
-    // for what the number means
-    Serial.print("[");
-    Serial.print(errorTopic);
-    Serial.print("] WIRE communications error (");
-    Serial.print(error);
-    Serial.print(") : ");
+    Serial.print("[" + String(errorTopic) + "] WIRE communications error (" +
+                 String(error) + ") : ");
 
     switch (error) {
       case Rtc_Wire_Error_None:
@@ -42,14 +35,14 @@ void TTime::begin() {
 
   if (!this->rtc.IsDateTimeValid()) {
     if (!wasError("setup IsDateTimeValid")) {
-      // Common Causes:
-      //    1) first time you ran and the device wasn't running yet
-      //    2) the battery on the device is low or even missing
+      // Общие причины:
+      // 1) вы запустили устройство впервые и оно еще неработало
+      // 2) батарея на устройстве разряжена или вообще отсутствует
 
       Serial.println("RTC lost confidence in the DateTime!");
-      // following line sets the RTC to the date & time this sketch was compiled
-      // it will also reset the valid flag internally unless the Rtc device is
-      // having an issue
+      // следующая строка устанавливает RTC на дату и время, когда этот скетч
+      // был скомпилирован она также сбросит флаг valid внутри, если только
+      // устройство Rtc не имеет проблемы
 
       this->rtc.SetDateTime(RtcDateTime(__DATE__, __TIME__));
     }
@@ -67,10 +60,6 @@ void TTime::begin() {
 
 time_t TTime::fetch_time_now_unix() { return this->update(); }
 
-/**
- * Returns current time as a string in the format returned by asctime() function
- * (e.g. "Mon Jan 01 00:00:00 1900\n").
- */
 String TTime::fetch_time_now_string() {
   this->update();
   return asctime(&this->time_now_structure);
@@ -84,18 +73,10 @@ String TTime::fetch_time_now_string_short() {
   return String(buffer);
 }
 
-/**
- * Returns the number of seconds that have elapsed since the device
- * started.
- */
 time_t TTime::fetch_online_seconds() {
   return this->update() - this->start_time;
 }
 
-/**
- * Returns a string representation of the elapsed time since the device
- * started, in the format: "X hrs. Y min. Z sec.".
- */
 String TTime::fetch_online_string() {
   String hours, minutes, seconds;
   time_t timeDiff = fetch_online_seconds();
@@ -110,9 +91,6 @@ String TTime::fetch_online_string() {
 
 void TTime::set_time(RtcDateTime time) { this->rtc.SetDateTime(time); }
 
-/**
- * Обновление структуры c текущим временем.
- */
 time_t TTime::update() {
   this->time_now_unix = this->rtc.GetDateTime().Unix32Time();
   localtime_r(&this->time_now_unix, &this->time_now_structure);

@@ -38,8 +38,8 @@ class TPin {
   TPin(std::vector<PinStatus> pins_status);
   void begin(TSdCard *sd_log_file);
   uint8_t convert_string_pin(String pin);
-  String get_pins_status(const bool html = false);
-  String get_pins_log(const int rows = 10, const bool html = false);
+  String fetch_pins_status(const bool html = false);
+  String fetch_pins_log(const int rows = 10, const bool html = false);
   uint8_t get_pin(String pin);
   uint8_t set_pin(String pin, uint8_t value);
   boolean is_output(String pin);
@@ -49,6 +49,6 @@ class TPin {
   std::vector<PinStatus> pins_status;
   TPinLog pin_log;
 
-  String replace_line_breaker_to_html(String input);
+  String replace_lb_to_br(String input);
   bool is_valid_pin(String pin);
 };

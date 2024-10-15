@@ -44,11 +44,11 @@ void TWeb::begin() {
   });
 
   server.on("/pins", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", pins.get_pins_status(true));
+    request->send(200, "text/plane", pins.fetch_pins_status(true));
   });
 
   server.on("/log", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", pins.get_pins_log(10, true));
+    request->send(200, "text/plane", pins.fetch_pins_log(10, true));
   });
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {

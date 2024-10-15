@@ -16,7 +16,6 @@ TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::UNDEFINED_PIN,  // D7
            PinStatus::UNDEFINED_PIN}  // D8
 );
-GTimer timer_one_minute(MS, 60000);
 
 void setup() {
   Serial.begin(115200);
@@ -37,9 +36,7 @@ void setup() {
   web.begin();
 }
 
-void loop() {
-  if (timer_one_minute.isReady()) trigger_one_minute();
-}
+void loop() {}
 
 ////////////////////////////////////////////////
 //                 FUNCTIONS                  //
@@ -47,7 +44,6 @@ void loop() {
 /**
  * Блок инструкций для запуска раз в секунду.
  */
-void trigger_one_minute() {}
 
 String getSsid() {
   String ssid = preferences.getString("ssid", "NONE");

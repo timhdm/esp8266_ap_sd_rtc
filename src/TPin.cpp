@@ -5,11 +5,11 @@
  * Выводы могут использоваться для получения сигнала (INPUT): D1, D2, D5, D6, D7
  */
 
-TPin::TPin(std::vector<PinStatus> pins_status) : pins_status(pins_status) {}
-
 ////////////////////////////////////////////////
 //                   TPIN                     //
 ////////////////////////////////////////////////
+TPin::TPin(std::vector<PinStatus> pins_status) : pins_status(pins_status) {}
+
 void TPin::begin(TSdCard *sd_log_file) {
   for (size_t i = 0; i < pins_status.size(); i++) {
     switch (pins_status[i]) {
@@ -47,6 +47,26 @@ uint8_t TPin::set_pin(String pin, uint8_t value) {
   return returnError;
 }
 
+// TODO: Лучше возвращать словарь с статусами пинов, и всю информацию
+// форматировать на стороне получателя
+String TPin::fetch_pins_status(const bool as_html) {
+  String result =
+      "[A0:" + String(analogRead(A0)) + "]\n" +
+      "[D0:" + String(digitalRead(D0)) + " D1:" + String(digitalRead(D1)) +
+      " D2:" + String(digitalRead(D2)) + "]\n" +
+      "[D3:" + String(digitalRead(D3)) + " D4:" + String(digitalRead(D4)) +
+      " D5:" + String(digitalRead(D5)) + "]\n" +
+      "[D6:" + String(digitalRead(D6)) + " D7:" + String(digitalRead(D7)) +
+      " D8:" + String(digitalRead(D8)) + "]";
+
+  return as_html ? replace_lb_to_br(result) : result;
+}
+
+String TPin::fetch_pins_log(const int rows_to_fetch, const bool as_html) {
+  return as_html ? replace_lb_to_br(pin_log.fetch(rows_to_fetch))
+                 : pin_log.fetch(rows_to_fetch);
+}
+
 boolean TPin::is_output(String pin) {
   String status = "";
   if (is_valid_pin(pin)) {
@@ -81,25 +101,7 @@ uint8_t TPin::convert_string_pin(String pin) {
   return it != wemosD1PinMap.end() ? it->second : 255;
 }
 
-String TPin::get_pins_status(const bool html) {
-  String result =
-      "[A0:" + String(analogRead(A0)) + "]\n" +
-      "[D0:" + String(digitalRead(D0)) + " D1:" + String(digitalRead(D1)) +
-      " D2:" + String(digitalRead(D2)) + "]\n" +
-      "[D3:" + String(digitalRead(D3)) + " D4:" + String(digitalRead(D4)) +
-      " D5:" + String(digitalRead(D5)) + "]\n" +
-      "[D6:" + String(digitalRead(D6)) + " D7:" + String(digitalRead(D7)) +
-      " D8:" + String(digitalRead(D8)) + "]";
-
-  return html ? replace_line_breaker_to_html(result) : result;
-}
-
-String TPin::get_pins_log(const int number, const bool html) {
-  return html ? replace_line_breaker_to_html(pin_log.fetch(number))
-              : pin_log.fetch(number);
-}
-
-String TPin::replace_line_breaker_to_html(String input) {
+String TPin::replace_lb_to_br(String input) {
   input.replace("\n", "<br>");
   return input;
 }
@@ -144,7 +146,7 @@ String TPinLog::PinState::to_string() {
   char time_buffer[80];
   strftime(time_buffer, sizeof(time_buffer), "%d-%m-%Y %H:%M:%S", timeinfo);
   return String(time_buffer) + " [PIN] " + String(pin) + " = " +
-         String(state ? "ON" : "OFF") + "\n";
+         String(state ? "ON" : "OFF");
 }
 
 ////////////////////////////////////////////////
@@ -159,7 +161,7 @@ String TPinLog::fetch(const size_t number) {
       pin_log_buffer.size() < number ? pin_log_buffer.size() : number;
 
   for (auto i = pin_log_buffer.size(); i > pin_log_buffer.size() - count; --i) {
-    result += pin_log_buffer[i - 1].to_string();
+    result += pin_log_buffer[i - 1].to_string() + "\n";
   }
 
   return result;
