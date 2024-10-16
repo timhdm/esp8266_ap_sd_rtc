@@ -8,11 +8,13 @@
 ////////////////////////////////////////////////
 //                   TPIN                     //
 ////////////////////////////////////////////////
-TPin::TPin(std::vector<PinStatus> pins_status) : pins_status(pins_status) {}
+TPin::TPin(std::vector<PinStatus> pins_d_mode)
+    : pins_d_mode(pins_d_mode), pins_d_state(8, 0), pins_a_state(1, 0) {}
 
 void TPin::begin(TSdCard *sd_log_file) {
-  for (size_t i = 0; i < pins_status.size(); i++) {
-    switch (pins_status[i]) {
+  for (size_t i = 0; i < pins_d_mode.size(); i++) {
+    this->pins_d_state[i] = digitalRead(convert_string_pin("D" + String(i)));
+    switch (pins_d_mode[i]) {
       case PinStatus::INPUT_PIN:
         pinMode(convert_string_pin("D" + String(i)), INPUT);
         break;
@@ -47,6 +49,26 @@ uint8_t TPin::set_pin(String pin, uint8_t value) {
   return returnError;
 }
 
+const std::vector<uint8_t> &TPin::get_pins_d_state() {
+  update_pins_d_state();
+  return this->pins_d_state;
+}
+
+const std::vector<uint16_t> &TPin::get_pins_a_state() {
+  update_pins_a_state();
+  return this->pins_a_state;
+}
+
+void TPin::update_pins_d_state() {
+  for (size_t i = 0; i < pins_d_mode.size(); i++) {
+    this->pins_d_state[i] = digitalRead(convert_string_pin("D" + String(i)));
+  }
+}
+
+void TPin::update_pins_a_state() {
+  this->pins_a_state[0] = analogRead(convert_string_pin("A0"));
+}
+
 // TODO: Лучше возвращать словарь с статусами пинов, и всю информацию
 // форматировать на стороне получателя
 String TPin::fetch_pins_status(const bool as_html) {
@@ -70,7 +92,7 @@ String TPin::fetch_pins_log(const int rows_to_fetch, const bool as_html) {
 boolean TPin::is_output(String pin) {
   String status = "";
   if (is_valid_pin(pin)) {
-    PinStatus pin_number = pins_status[pin.substring(1).toInt()];
+    PinStatus pin_number = pins_d_mode[pin.substring(1).toInt()];
     switch (pin_number) {
       case PinStatus::OUTPUT_PIN:
         status = " is output.";
@@ -95,8 +117,8 @@ boolean TPin::is_output(String pin) {
 uint8_t TPin::convert_string_pin(String pin) {
   is_valid_pin(pin);
   static const std::map<String, uint8_t> wemosD1PinMap = {
-      {"D0", D0}, {"D1", D1}, {"D2", D2}, {"D3", D3}, {"D4", D4},
-      {"D5", D5}, {"D6", D6}, {"D7", D7}, {"D8", D8}};
+      {"A0", A0}, {"D0", D0}, {"D1", D1}, {"D2", D2}, {"D3", D3},
+      {"D4", D4}, {"D5", D5}, {"D6", D6}, {"D7", D7}, {"D8", D8}};
   auto it = wemosD1PinMap.find(pin);
   return it != wemosD1PinMap.end() ? it->second : 255;
 }

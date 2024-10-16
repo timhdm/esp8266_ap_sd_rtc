@@ -47,6 +47,40 @@ void TWeb::begin() {
     request->send(200, "text/plane", pins.fetch_pins_status(true));
   });
 
+  server.on("/pins-a", HTTP_GET, [](AsyncWebServerRequest *request) {
+    if (request->hasParam("pin")) {
+      uint16_t pin_index = request->getParam("pin")->value().toInt();
+      uint16_t pin_count =
+          static_cast<uint16_t>(pins.get_pins_a_state().size());
+
+      if (pin_index >= 0 && pin_index < pin_count) {
+        request->send(200, "text/plain",
+                      String(pins.get_pins_a_state()[pin_index]));
+      } else {
+        request->send(400, "text/plain", "Invalid pin index.");
+      }
+    } else {
+      request->send(400, "text/plain", "Pin parameter missing.");
+    }
+  });
+
+  server.on("/pins-d", HTTP_GET, [](AsyncWebServerRequest *request) {
+    if (request->hasParam("pin")) {
+      uint16_t pin_index = request->getParam("pin")->value().toInt();
+      uint16_t pin_count =
+          static_cast<uint16_t>(pins.get_pins_d_state().size());
+
+      if (pin_index >= 0 && pin_index < pin_count) {
+        request->send(200, "text/plain",
+                      String(pins.get_pins_d_state()[pin_index]));
+      } else {
+        request->send(400, "text/plain", "Invalid pin index.");
+      }
+    } else {
+      request->send(400, "text/plain", "Pin parameter missing.");
+    }
+  });
+
   server.on("/log", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/plane", pins.fetch_pins_log(10, true));
   });

@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include <DNSServer.h>
-#include <GyverTimer.h>
 #include <Preferences.h>
 #include <Wire.h>
 

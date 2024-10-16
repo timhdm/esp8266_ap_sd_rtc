@@ -21,6 +21,7 @@ class TPinLog {
 
  public:
   TPinLog() : sd_log_file(nullptr), sd_log_file_name("pin.log") {};
+
   void begin(TSdCard *sd_log_file);
   void append(String pin, uint8_t state);
   String fetch(const size_t number = 1);
@@ -35,20 +36,27 @@ class TPinLog {
 
 class TPin {
  public:
-  TPin(std::vector<PinStatus> pins_status);
+  TPin(std::vector<PinStatus> pins_d_mode);
+
   void begin(TSdCard *sd_log_file);
-  uint8_t convert_string_pin(String pin);
-  String fetch_pins_status(const bool html = false);
-  String fetch_pins_log(const int rows = 10, const bool html = false);
   uint8_t get_pin(String pin);
   uint8_t set_pin(String pin, uint8_t value);
+  const std::vector<uint8_t> &get_pins_d_state();
+  const std::vector<uint16_t> &get_pins_a_state();
+  String fetch_pins_status(const bool html = false);
+  String fetch_pins_log(const int rows = 10, const bool html = false);
   boolean is_output(String pin);
   boolean is_input(String pin) { return !is_output(pin); };
+  uint8_t convert_string_pin(String pin);
 
  private:
-  std::vector<PinStatus> pins_status;
+  std::vector<PinStatus> pins_d_mode;
+  std::vector<uint8_t> pins_d_state;
+  std::vector<uint16_t> pins_a_state;
   TPinLog pin_log;
 
+  void update_pins_d_state();
+  void update_pins_a_state();
   String replace_lb_to_br(String input);
   bool is_valid_pin(String pin);
 };
