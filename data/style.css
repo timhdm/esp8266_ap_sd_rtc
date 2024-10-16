@@ -1,3 +1,8 @@
+:root {
+  --primary-color: rgba(204, 0, 75, 1); /* Основной цвет */
+  --text-color: rgba(255, 255, 255, 1); /* Цвет текста */
+}
+
 html {
   font-family: Arial;
   color: rgb(50, 50, 50);
@@ -8,7 +13,7 @@ html {
 h1 {
   font-size: 2rem;
   margin-top: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   text-transform: uppercase;
 }
 
@@ -30,22 +35,6 @@ body {
   padding-bottom: 25px;
 }
 
-button {
-  color: rgba(255, 255, 255, 1); /* цвет текста */
-  text-decoration: none; /* убирать подчёркивание у ссылок */
-  user-select: none; /* убирать выделение текста */
-  background-color: rgba(204, 0, 75, 1); /* фон кнопки */
-  font-size: 1rem;
-  padding: 0.75em 1em; /* отступ от текста */
-  border-radius: 10px;
-  border: 0;
-  outline: none; /* убирать контур в Mozilla */
-}
-
-button:disabled {
-  background-color: rgba(204, 204, 204, 1); /* фон кнопки */
-}
-
 input {
   font-size: small;
   font-weight: bold;
@@ -57,11 +46,11 @@ input {
   resize: none;
   border: 0;
   transition: all 0.3s;
-  border-bottom: 2px solid rgba(204, 204, 204, 1);
+  border-bottom: 2px solid var(--text-color);
 }
 
 input:focus {
-  border-bottom: 2px solid rgba(204, 0, 75, 1);
+  border-bottom: 2px solid var(--primary-color);
 }
 
 td {
@@ -69,41 +58,48 @@ td {
   padding-bottom: 20px; 
 }
 
-.headcontainer {
+.board-id {
   display: inline-block;
   vertical-align: middle;
   font-weight: bold;
+  font-size: 1.3rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
 .button {
   vertical-align: middle;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  color: rgba(255, 255, 255, 1); /* цвет текста */
-  background-color: rgba(204, 0, 75, 1); /* фон кнопки */
   font-size: 1rem;
-  padding: 0.5rem 0.5rem; /* отступ от текста */
+  font-weight: bold;
+  color: var(--text-color); /* цвет текста */
+  background-color: var(--primary-color); /* фон кнопки */
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
   text-decoration: none; /* убирать подчёркивание у ссылок */
   user-select: none; /* убирать выделение текста */
   border-radius: 10px;
-  border: 0;
   outline: none; /* убирать контур в Mozilla */
 }
 
-.button.button-input {
-  margin-top: 0.25rem; /* Увеличенный отступ сверху */
+form .button {
+  box-shadow: none; /* Убираем тень */
+  border: none; /* Убираем обводку, если она есть */
 }
 
-.icon {
-  vertical-align: sub;
+input {
+  border-radius: 10px;
+  box-shadow: none; /* Убираем тень */
+  border: 0.2rem solid rgb(240, 240, 240); /* Вы можете изменить обводку по вашему усмотрению */
 }
 
-.icon {
-  stroke: white;
+.button-add-time {
+  font-size: 1rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .toggle {
@@ -137,7 +133,7 @@ td {
 }
 
 .toggle-checkbox:checked + .toggle-switch {
-  background: rgba(204, 0, 75, 1);
+  background: var(--primary-color);
 }
 .toggle-checkbox:checked + .toggle-switch:before {
   left: 29px;
@@ -157,14 +153,7 @@ td {
 }
 
 .toggle-checkbox:disabled + .toggle-switch + .toggle-label {
-  color: #a0a0a0;
-}
-
-/* Центрирование формы */
-.form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  color: #F0F0F0;
 }
 
 .inline-input {
@@ -181,9 +170,22 @@ input[type="number"] {
   width: 9ch;  /* Поле будет достаточно широким для 5 символов */
 }
 
+#time {
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pin-a-zero {
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  /* display: inline; */
+}
+
 #log {
-  font-size: 12px; /* Уменьшенный размер шрифта */
-  color: #D3D3D3; /* Светло-серый цвет */
+  font-size: 0.7rem; /* Уменьшенный размер шрифта */
+  color: #CCCCCC; /* Светло-серый цвет */
   background-color: #F0F0F0; /* Дополнительный светлый фон для выделения */
   padding: 10px; /* Отступы вокруг текста */
   border: 1px solid #CCCCCC; /* Светло-серая рамка */

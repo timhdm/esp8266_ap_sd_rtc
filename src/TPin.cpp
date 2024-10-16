@@ -69,21 +69,6 @@ void TPin::update_pins_a_state() {
   this->pins_a_state[0] = analogRead(convert_string_pin("A0"));
 }
 
-// TODO: Лучше возвращать словарь с статусами пинов, и всю информацию
-// форматировать на стороне получателя
-String TPin::fetch_pins_status(const bool as_html) {
-  String result =
-      "[A0:" + String(analogRead(A0)) + "]\n" +
-      "[D0:" + String(digitalRead(D0)) + " D1:" + String(digitalRead(D1)) +
-      " D2:" + String(digitalRead(D2)) + "]\n" +
-      "[D3:" + String(digitalRead(D3)) + " D4:" + String(digitalRead(D4)) +
-      " D5:" + String(digitalRead(D5)) + "]\n" +
-      "[D6:" + String(digitalRead(D6)) + " D7:" + String(digitalRead(D7)) +
-      " D8:" + String(digitalRead(D8)) + "]";
-
-  return as_html ? replace_lb_to_br(result) : result;
-}
-
 String TPin::fetch_pins_log(const int rows_to_fetch, const bool as_html) {
   return as_html ? replace_lb_to_br(pin_log.fetch(rows_to_fetch))
                  : pin_log.fetch(rows_to_fetch);

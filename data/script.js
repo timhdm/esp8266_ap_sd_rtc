@@ -1,8 +1,19 @@
 setInterval(function () {
   refreshValue("time");
-  refreshValue("pins");
   refreshValue("log");
+  refreshPinA("0");
 }, 1000);
+
+function refreshPinA(pin) {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("pina" + pin).innerHTML = this.responseText;
+    }
+  };
+  xhr.open("GET", "/pins-a?pin=" + pin, true);
+  xhr.send();
+}
 
 function refreshValue(elementid) {
   var xhr = new XMLHttpRequest();
