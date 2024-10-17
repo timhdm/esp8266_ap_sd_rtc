@@ -18,7 +18,7 @@ class TTime {
   TTime() : rtc(Wire), time_now_unix(time(nullptr)), start_time(0) {}
 
   void begin();
-  time_t fetch_time_now_unix();
+  const time_t fetch_time_now_unix();
   String fetch_time_now_string();
   String fetch_time_now_string_short();
   time_t fetch_online_seconds();

@@ -58,7 +58,7 @@ void TTime::begin() {
   this->start_time = this->update();
 }
 
-time_t TTime::fetch_time_now_unix() { return this->update(); }
+const time_t TTime::fetch_time_now_unix() { return this->update(); }
 
 String TTime::fetch_time_now_string() {
   this->update();

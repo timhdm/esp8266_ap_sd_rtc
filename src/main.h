@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include <DNSServer.h>
+#include <GyverTimer.h>
 #include <Preferences.h>
 #include <Wire.h>
 
@@ -15,5 +16,5 @@
 #include "TWeb.h"
 
 String getSsid();
-void trigger_one_minute();
+void loop_scheduler(const time_t& now_unixtime);
 void initPins();

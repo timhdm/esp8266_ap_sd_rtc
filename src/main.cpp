@@ -17,6 +17,7 @@ TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::UNDEFINED_PIN,  // D7
            PinStatus::UNDEFINED_PIN}  // D8
 );
+GTimer timer_60s(MS);
 std::array<TDayScheduler, 8> scheduler_pool{};
 
 void setup() {
@@ -29,6 +30,7 @@ void setup() {
   sd_card.begin();
   pins.begin(&sd_card);
   log_system.begin(&sd_card, "system.log");
+  timer_60s.setInterval(60000);
 
   // TODO
   scheduler_pool[0].set(0, time_now.fetch_time_now_unix(), 20, 52, 1);
@@ -45,18 +47,16 @@ void setup() {
 }
 
 void loop() {
-  scheduler_pool[0].is_up(time_now.fetch_time_now_unix());
-  scheduler_pool[3].is_up(time_now.fetch_time_now_unix());
-  scheduler_pool[4].is_up(time_now.fetch_time_now_unix());
+  if (timer_60s.isReady()) loop_scheduler(time_now.fetch_time_now_unix());
 }
 
 ////////////////////////////////////////////////
 //                 FUNCTIONS                  //
 ////////////////////////////////////////////////
-void loop_scheduler() {
-  for (size_t i = 0; i < scheduler_pool.size(); ++i) {
-    scheduler_pool[i].is_up(time_now.fetch_time_now_unix());
-  }
+void loop_scheduler(const time_t& now_unixtime) {
+  scheduler_pool[0].is_up(now_unixtime);
+  scheduler_pool[3].is_up(now_unixtime);
+  scheduler_pool[4].is_up(now_unixtime);
 }
 
 String getSsid() {
