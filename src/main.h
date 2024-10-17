@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include "TDayScheduler.h"
 #include "TLittleFS.h"
 #include "TPin.h"
 #include "TSdCard.h"

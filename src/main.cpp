@@ -16,6 +16,7 @@ TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::UNDEFINED_PIN,  // D7
            PinStatus::UNDEFINED_PIN}  // D8
 );
+TDayScheduler scheduler_d4;
 
 void setup() {
   Serial.begin(115200);
@@ -27,6 +28,10 @@ void setup() {
   sd_card.begin();
   pins.begin(&sd_card);
 
+  // TODO
+  scheduler_d4.begin(time_now.fetch_time_now_unix(), 13, 5, 30);
+  scheduler_d4.enable();
+
   String ssid = getSsid();
   const char* password = "esp12345";  // TODO
   WiFi.softAP(ssid, password);
@@ -36,7 +41,7 @@ void setup() {
   web.begin();
 }
 
-void loop() {}
+void loop() { scheduler_d4.is_time(time_now.fetch_time_now_unix()); }
 
 ////////////////////////////////////////////////
 //                 FUNCTIONS                  //
