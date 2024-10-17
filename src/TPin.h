@@ -1,3 +1,10 @@
+/**
+ * @file TPin.h
+ * @brief Class for working with pins
+ * @version 0.1.1
+ * @date 17-10-2024
+ */
+
 #pragma once
 #include <Arduino.h>
 

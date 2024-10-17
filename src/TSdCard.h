@@ -1,3 +1,10 @@
+/**
+ * @file TSdCard.h
+ * @brief  Class for working with SD card
+ * @version 0.1.0
+ * @date 17-10-2024
+ */
+
 #pragma once
 #include "Arduino.h"
 #include "SD.h"
