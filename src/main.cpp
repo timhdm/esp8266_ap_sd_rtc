@@ -6,6 +6,7 @@ TWeb web;
 Preferences preferences;
 TLittleFS little_fs;
 TSdCard sd_card;
+TLog log_system;
 TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::UNDEFINED_PIN,  // D1
            PinStatus::UNDEFINED_PIN,  // D2
@@ -16,7 +17,7 @@ TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::UNDEFINED_PIN,  // D7
            PinStatus::UNDEFINED_PIN}  // D8
 );
-TDayScheduler scheduler_d4;
+std::array<TDayScheduler, 8> scheduler_pool{};
 
 void setup() {
   Serial.begin(115200);
@@ -27,10 +28,12 @@ void setup() {
   little_fs.begin();
   sd_card.begin();
   pins.begin(&sd_card);
+  log_system.begin(&sd_card, "system.log");
 
   // TODO
-  scheduler_d4.begin(time_now.fetch_time_now_unix(), 13, 5, 30);
-  scheduler_d4.enable();
+  scheduler_pool[0].set(0, time_now.fetch_time_now_unix(), 20, 52, 1);
+  scheduler_pool[3].set(3, time_now.fetch_time_now_unix(), 20, 53, 1);
+  scheduler_pool[4].set(4, time_now.fetch_time_now_unix(), 20, 54, 1);
 
   String ssid = getSsid();
   const char* password = "esp12345";  // TODO
@@ -41,14 +44,20 @@ void setup() {
   web.begin();
 }
 
-void loop() { scheduler_d4.is_time(time_now.fetch_time_now_unix()); }
+void loop() {
+  scheduler_pool[0].is_up(time_now.fetch_time_now_unix());
+  scheduler_pool[3].is_up(time_now.fetch_time_now_unix());
+  scheduler_pool[4].is_up(time_now.fetch_time_now_unix());
+}
 
 ////////////////////////////////////////////////
 //                 FUNCTIONS                  //
 ////////////////////////////////////////////////
-/**
- * Блок инструкций для запуска раз в секунду.
- */
+void loop_scheduler() {
+  for (size_t i = 0; i < scheduler_pool.size(); ++i) {
+    scheduler_pool[i].is_up(time_now.fetch_time_now_unix());
+  }
+}
 
 String getSsid() {
   String ssid = preferences.getString("ssid", "NONE");

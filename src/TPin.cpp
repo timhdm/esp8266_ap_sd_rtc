@@ -13,13 +13,14 @@ TPin::TPin(std::vector<PinStatus> pins_d_mode)
 
 void TPin::begin(TSdCard *sd_log_file) {
   for (size_t i = 0; i < pins_d_mode.size(); i++) {
-    this->pins_d_state[i] = digitalRead(convert_string_pin("D" + String(i)));
+    this->pins_d_state[i] =
+        digitalRead(get_pin_id_from_string("D" + String(i)));
     switch (pins_d_mode[i]) {
       case PinStatus::INPUT_PIN:
-        pinMode(convert_string_pin("D" + String(i)), INPUT);
+        pinMode(get_pin_id_from_string("D" + String(i)), INPUT);
         break;
       case PinStatus::OUTPUT_PIN:
-        pinMode(convert_string_pin("D" + String(i)), OUTPUT);
+        pinMode(get_pin_id_from_string("D" + String(i)), OUTPUT);
         break;
 
       default:
@@ -30,7 +31,7 @@ void TPin::begin(TSdCard *sd_log_file) {
 }
 
 uint8_t TPin::get_pin(String pin) {
-  return digitalRead(convert_string_pin(pin));
+  return digitalRead(get_pin_id_from_string(pin));
 }
 
 uint8_t TPin::set_pin(String pin, uint8_t value) {
@@ -38,7 +39,7 @@ uint8_t TPin::set_pin(String pin, uint8_t value) {
   if (!is_output(pin)) {
     returnError = 1;
   } else {
-    uint8_t pinConvertable = convert_string_pin(pin);
+    uint8_t pinConvertable = get_pin_id_from_string(pin);
     if (pinConvertable != 255) {
       digitalWrite(pinConvertable, value);
       pin_log.append(pin, value);
@@ -61,12 +62,13 @@ const std::vector<uint16_t> &TPin::get_pins_a_state() {
 
 void TPin::update_pins_d_state() {
   for (size_t i = 0; i < pins_d_mode.size(); i++) {
-    this->pins_d_state[i] = digitalRead(convert_string_pin("D" + String(i)));
+    this->pins_d_state[i] =
+        digitalRead(get_pin_id_from_string("D" + String(i)));
   }
 }
 
 void TPin::update_pins_a_state() {
-  this->pins_a_state[0] = analogRead(convert_string_pin("A0"));
+  this->pins_a_state[0] = analogRead(get_pin_id_from_string("A0"));
 }
 
 String TPin::fetch_pins_log_buffer(const size_t rows, const bool as_html) {
@@ -104,18 +106,13 @@ boolean TPin::is_output(String pin) {
   return false;
 }
 
-uint8_t TPin::convert_string_pin(String pin) {
+uint8_t TPin::get_pin_id_from_string(String pin) {
   is_valid_pin(pin);
   static const std::map<String, uint8_t> wemosD1PinMap = {
       {"A0", A0}, {"D0", D0}, {"D1", D1}, {"D2", D2}, {"D3", D3},
       {"D4", D4}, {"D5", D5}, {"D6", D6}, {"D7", D7}, {"D8", D8}};
   auto it = wemosD1PinMap.find(pin);
   return it != wemosD1PinMap.end() ? it->second : 255;
-}
-
-String TPin::replace_lb_to_br(String input) {
-  input.replace("\n", "<br>");
-  return input;
 }
 
 bool TPin::is_valid_pin(String pin) {
@@ -147,6 +144,11 @@ bool TPin::is_valid_pin(String pin) {
   return !error;
 }
 
+String TPin::replace_lb_to_br(String input) {
+  input.replace("\n", "<br>");
+  return input;
+}
+
 ////////////////////////////////////////////////
 //                 PINSTATE                   //
 ////////////////////////////////////////////////
@@ -154,11 +156,8 @@ TPinLog::PinState::PinState(String pin, uint8_t state)
     : pin(pin), state(state), timestamp(time_now.fetch_time_now_unix()) {}
 
 String TPinLog::PinState::to_string() {
-  struct tm *timeinfo = localtime(&timestamp);
-  char time_buffer[80];
-  strftime(time_buffer, sizeof(time_buffer), "%d-%m-%Y %H:%M:%S", timeinfo);
-  return String(time_buffer) + " [PIN] " + String(pin) + " = " +
-         String(state ? "ON" : "OFF");
+  return String(time_now.fetch_time_now_string_short()) + " [PIN] " +
+         String(pin) + " = " + String(state ? "ON" : "OFF");
 }
 
 ////////////////////////////////////////////////

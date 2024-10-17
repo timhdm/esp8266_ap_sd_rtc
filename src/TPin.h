@@ -56,7 +56,7 @@ class TPin {
 
   boolean is_output(String pin);
   boolean is_input(String pin) { return !is_output(pin); };
-  uint8_t convert_string_pin(String pin);
+  uint8_t get_pin_id_from_string(String pin);
 
  private:
   std::vector<PinStatus> pins_d_mode;

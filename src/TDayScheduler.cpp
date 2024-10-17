@@ -1,13 +1,14 @@
 #include "TDayScheduler.h"
 
-void TDayScheduler::begin(const time_t& now_unixtime, uint16_t hour,
-                          uint16_t minute, uint16_t duration_in_seconds) {
-  set_duration(duration_in_seconds);
-  set_schedule(now_unixtime, hour, minute);
-}
+void TDayScheduler::set(uint8_t id, const time_t& now_unixtime, uint16_t hour,
+                        uint16_t minute, uint16_t duration_in_seconds,
+                        bool enabled) {
+  this->id = id;
+  this->enabled = enabled;
+  this->duration_in_seconds = duration_in_seconds;
+  this->hour = hour;
+  this->minute = minute;
 
-void TDayScheduler::set_schedule(const time_t& now_unixtime, uint16_t hour,
-                                 uint16_t minute) {
   // Преобразуем текущее время в структуру tm
   struct tm* timeinfo = localtime(&now_unixtime);
 
@@ -18,17 +19,25 @@ void TDayScheduler::set_schedule(const time_t& now_unixtime, uint16_t hour,
 
   // Если новое вермя срабатывания в этих сутках уже прошло, то добавляем
   // сутки.
-  next_unixtime = mktime(timeinfo);
-  if (next_unixtime < now_unixtime) {
-    next_unixtime += 86400;
+  start_unixtime = mktime(timeinfo);
+  if (start_unixtime < now_unixtime) {
+    start_unixtime += 86400;
   }
+
+  end_unixtime = start_unixtime + duration_in_seconds;
 }
-bool TDayScheduler::is_time(const time_t& now_unixtime) {
-  if (enabled || duration_in_seconds == 0 || next_unixtime == 0) return false;
-  bool return_flag = false;
-  if (now_unixtime > next_unixtime) {
-    return_flag = true;
-    next_unixtime = now_unixtime + 86400;  // +1 сутки
+bool TDayScheduler::is_up(const time_t& now_unixtime) {
+  if (enabled || duration_in_seconds == 0 || start_unixtime == 0) return false;
+  if (!up && now_unixtime > start_unixtime) {
+    this->up = true;
+    start_unixtime = start_unixtime + 86400;  // +1 сутки
+    log_system.append("Scheduler [" + String(this->id) + "] -> ON");
   }
-  return return_flag;
+  if (up && now_unixtime > end_unixtime) {
+    this->up = false;
+    end_unixtime =
+        start_unixtime + 86400 + this->duration_in_seconds;  // +1 сутки
+    log_system.append("Scheduler [" + String(this->id) + "] -> OFF");
+  }
+  return this->up;
 }
