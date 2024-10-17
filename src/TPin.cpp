@@ -69,9 +69,14 @@ void TPin::update_pins_a_state() {
   this->pins_a_state[0] = analogRead(convert_string_pin("A0"));
 }
 
-String TPin::fetch_pins_log(const int rows_to_fetch, const bool as_html) {
-  return as_html ? replace_lb_to_br(pin_log.fetch(rows_to_fetch))
-                 : pin_log.fetch(rows_to_fetch);
+String TPin::fetch_pins_log_buffer(const size_t rows, const bool as_html) {
+  String log_buffer = pin_log.fetch(rows);
+  return as_html ? replace_lb_to_br(log_buffer) : log_buffer;
+}
+
+String TPin::fetch_pins_log_sd(const size_t rows, const bool as_html) {
+  String log_buffer = pin_log.fetch_sd(rows);
+  return as_html ? replace_lb_to_br(log_buffer) : log_buffer;
 }
 
 boolean TPin::is_output(String pin) {
@@ -118,7 +123,7 @@ bool TPin::is_valid_pin(String pin) {
   if (pin.length() < 2 || pin.length() > 3) {
     error = true;
   } else {
-    if (pin[0] != 'D') {
+    if (pin[0] != 'D' && pin[0] != 'A') {
       error = true;
     } else {
       switch (pin.length()) {
@@ -136,7 +141,7 @@ bool TPin::is_valid_pin(String pin) {
   }
 
   if (error) {
-    Serial.println("[DBG] Invalid pin name!");
+    Serial.println("[DBG] '" + String(pin) + "' Invalid pin name!");
   }
 
   return !error;
@@ -161,17 +166,22 @@ String TPinLog::PinState::to_string() {
 ////////////////////////////////////////////////
 void TPinLog::begin(TSdCard *sd_log_file) { this->sd_log_file = sd_log_file; }
 
-String TPinLog::fetch(const size_t number) {
+String TPinLog::fetch(const size_t rows) {
   String result = "";
 
-  size_t count =
-      pin_log_buffer.size() < number ? pin_log_buffer.size() : number;
+  size_t log_size = pin_log_buffer.size();
+  size_t count = log_size < rows ? log_size : rows;
 
-  for (auto i = pin_log_buffer.size(); i > pin_log_buffer.size() - count; --i) {
-    result += pin_log_buffer[i - 1].to_string() + "\n";
+  for (auto i = log_size; i > log_size - count; --i) {
+    if (i != log_size) result += "\n";
+    result += pin_log_buffer[i - 1].to_string();
   }
 
-  return result;
+  return result.length() > 0 ? result : "Empty log.";
+}
+
+String TPinLog::fetch_sd(const size_t rows) {
+  return this->sd_log_file->read(this->sd_log_file_name, rows);
 }
 
 void TPinLog::append(String pin, uint8_t state) {

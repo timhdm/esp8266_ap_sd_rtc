@@ -43,10 +43,6 @@ void TWeb::begin() {
     request->send(200, "text/plane", time_now.fetch_online_string());
   });
 
-  server.on("/pins", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", pins.fetch_pins_status(true));
-  });
-
   server.on("/pins-a", HTTP_GET, [](AsyncWebServerRequest *request) {
     if (request->hasParam("pin")) {
       uint16_t pin_index = request->getParam("pin")->value().toInt();
@@ -81,8 +77,12 @@ void TWeb::begin() {
     }
   });
 
-  server.on("/log", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", pins.fetch_pins_log(10, true));
+  server.on("/log-pin", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plane", pins.fetch_pins_log_buffer(10, true));
+  });
+
+  server.on("/log-pin-sd", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plane", pins.fetch_pins_log_sd());
   });
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {

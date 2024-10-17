@@ -24,12 +24,13 @@ class TPinLog {
 
   void begin(TSdCard *sd_log_file);
   void append(String pin, uint8_t state);
-  String fetch(const size_t number = 1);
+  String fetch(const size_t rows = 1);
+  String fetch_sd(const size_t rows = 0);
 
  private:
   std::vector<PinState> pin_log_buffer;
   TSdCard *sd_log_file;
-  String sd_log_file_name;
+  const char *sd_log_file_name;
 
   String print_timestamp(time_t timestamp);
 };
@@ -43,7 +44,9 @@ class TPin {
   uint8_t set_pin(String pin, uint8_t value);
   const std::vector<uint8_t> &get_pins_d_state();
   const std::vector<uint16_t> &get_pins_a_state();
-  String fetch_pins_log(const int rows = 10, const bool html = false);
+  String fetch_pins_log_buffer(const size_t rows = 10, const bool html = false);
+  String fetch_pins_log_sd(const size_t rows = 0, const bool html = false);
+
   boolean is_output(String pin);
   boolean is_input(String pin) { return !is_output(pin); };
   uint8_t convert_string_pin(String pin);
