@@ -15,7 +15,7 @@ class TSdCard {
   TSdCard() : log_file(nullptr) {};
   void begin();
   void append(const char *file_name, String data);
-  String read(const char *file_name, const size_t rows);
+  String read(const char *file_name, const size_t rows = 0);
   void list_files();
 
  private:

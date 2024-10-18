@@ -32,7 +32,6 @@ class TPinLog {
   void begin(TSdCard *sd_log_file);
   void append(String pin, uint8_t state);
   String fetch(const size_t rows = 1);
-  String fetch_sd(const size_t rows = 0);
 
  private:
   std::vector<PinState> pin_log_buffer;

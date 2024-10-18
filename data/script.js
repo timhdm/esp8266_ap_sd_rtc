@@ -1,6 +1,6 @@
 setInterval(function () {
   refreshValue("time");
-  refreshValue("log-pin");
+  refreshValue("log-pin-buffer");
   refreshPinA("0");
 }, 1000);
 

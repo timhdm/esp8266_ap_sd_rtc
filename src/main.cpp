@@ -8,34 +8,38 @@ TLittleFS little_fs;
 TSdCard sd_card;
 TLog log_system;
 TPin pins({PinStatus::OUTPUT_PIN,     // D0
-           PinStatus::UNDEFINED_PIN,  // D1
+           PinStatus::OUTPUT_PIN,     // D1
            PinStatus::UNDEFINED_PIN,  // D2
-           PinStatus::OUTPUT_PIN,     // D3
+           PinStatus::UNDEFINED_PIN,  // D3
            PinStatus::OUTPUT_PIN,     // D4
            PinStatus::UNDEFINED_PIN,  // D5
            PinStatus::UNDEFINED_PIN,  // D6
            PinStatus::UNDEFINED_PIN,  // D7
            PinStatus::UNDEFINED_PIN}  // D8
 );
-GTimer timer_60s(MS);
+GTimer timer_1s(MS);
 std::array<TDayScheduler, 8> scheduler_pool{};
+TRtc rtc;
 
 void setup() {
   Serial.begin(115200);
   Serial.println("\n[SYS] Initializing...");
 
-  time_now.begin();
   preferences.begin("esp8266");
   little_fs.begin();
   sd_card.begin();
   pins.begin(&sd_card);
   log_system.begin(&sd_card, "system.log");
-  timer_60s.setInterval(60000);
+
+  timer_1s.setInterval(1000);
+
+  rtc.begin(D3, D2);
+  time_now.set_time(rtc.getDateTime());
 
   // TODO
-  scheduler_pool[0].set(0, time_now.fetch_time_now_unix(), 20, 52, 1);
-  scheduler_pool[3].set(3, time_now.fetch_time_now_unix(), 20, 53, 1);
-  scheduler_pool[4].set(4, time_now.fetch_time_now_unix(), 20, 54, 1);
+  scheduler_pool[0].set(0, time_now.fetch_now_unixtime(), 11, 43, 30);
+  scheduler_pool[3].set(3, time_now.fetch_now_unixtime(), 11, 44, 21);
+  scheduler_pool[4].set(4, time_now.fetch_now_unixtime(), 11, 45, 10);
 
   String ssid = getSsid();
   const char* password = "esp12345";  // TODO
@@ -47,7 +51,8 @@ void setup() {
 }
 
 void loop() {
-  if (timer_60s.isReady()) loop_scheduler(time_now.fetch_time_now_unix());
+  time_now.update();
+  if (timer_1s.isReady()) loop_scheduler(time_now.fetch_now_unixtime());
 }
 
 ////////////////////////////////////////////////

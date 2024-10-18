@@ -12,20 +12,10 @@ void TWeb::begin() {
   });
 
   server.on("/time", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", time_now.fetch_time_now_string());
+    request->send(200, "text/plane", time_now.fetch_now_string_long());
   });
 
   server.on("/time-set", HTTP_GET, [](AsyncWebServerRequest *request) {
-    size_t paramsCount = request->params();
-    // Перебираем все параметры и выводим их
-    for (size_t i = 0; i < paramsCount; i++) {
-      const AsyncWebParameter *param = request->getParam(i);
-      Serial.print("[WEB] Param: ");
-      Serial.print(param->name());
-      Serial.print(" = ");
-      Serial.println(param->value());
-    }
-
     String year = request->getParam("year")->value();
     String month = request->getParam("month")->value();
     String day = request->getParam("day")->value();
@@ -33,8 +23,16 @@ void TWeb::begin() {
     String minutes = request->getParam("minutes")->value();
     if (year != "" && month != "" && day != "" && hours != "" &&
         minutes != "") {
-      time_now.set_time(RtcDateTime(year.toInt(), month.toInt(), day.toInt(),
-                                    hours.toInt(), minutes.toInt(), 0));
+      RtcDateTime time = RtcDateTime(year.toInt(), month.toInt(), day.toInt(),
+                                     hours.toInt(), minutes.toInt(), 0);
+      rtc.set_time(time);
+      time_now.set_time(time);
+      log_system.append("[WEB] Time set to: " + String(day.toInt()) + "." +
+                        String(month.toInt()) + "." + String(year.toInt()) +
+                        " " + String(hours.toInt()) + ":" +
+                        String(minutes.toInt()) +
+                        " (time: " + time_now.fetch_now_unixtime() +
+                        ", rtc: " + rtc.getDateTime().Unix32Time() + ")");
     }
     request->send(200, "text/plain", "OK");
   });
@@ -77,12 +75,16 @@ void TWeb::begin() {
     }
   });
 
-  server.on("/log-pin", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server.on("/log-pin-buffer", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/plane", pins.fetch_pins_log_buffer(10, true));
   });
 
-  server.on("/log-pin-sd", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", pins.fetch_pins_log_sd());
+  server.on("/log-pin", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plane", sd_card.read("pin.log"));
+  });
+
+  server.on("/log-system", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plane", sd_card.read("system.log"));
   });
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {

@@ -11,6 +11,7 @@
 #include "TDayScheduler.h"
 #include "TLittleFS.h"
 #include "TPin.h"
+#include "TRtc.h"
 #include "TSdCard.h"
 #include "TTime.h"
 #include "TWeb.h"

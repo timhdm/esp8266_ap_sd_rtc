@@ -20,13 +20,18 @@
 #include <Preferences.h>
 #include <RtcDS1307.h>
 
+#include "TLog.h"
 #include "TPin.h"
+#include "TRtc.h"
 #include "TTime.h"
 
 // main.h
 extern TTime time_now;
+extern TRtc rtc;
 extern TPin pins;
 extern Preferences preferences;
+extern TLog log_system;
+extern TSdCard sd_card;
 
 class TWeb {
  public:

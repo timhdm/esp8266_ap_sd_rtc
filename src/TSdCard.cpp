@@ -21,32 +21,31 @@ void TSdCard::append(const char *file_name, String message) {
   this->log_file = SD.open(file_name, FILE_WRITE);
   if (this->log_file) {
     message.replace("\n", "");
-    Serial.print("[SDC] Append [" + message + "] to file " + file_name + "...");
     this->log_file.println(message);
     this->log_file.close();
-    Serial.println("[OK]");
   }
 }
 
 String TSdCard::read(const char *file_name, const size_t rows) {
-  File logFile = SD.open(file_name, FILE_READ);
-  if (!logFile) {
-    Serial.println("[SDC] Failed to open log file.");
-    return "[SDC] Unable to open log file.";
+  File file = SD.open(file_name, FILE_READ);
+  if (!file) {
+    String error_message = "[SDC] Unable to open file: " + String(file_name);
+    Serial.println(error_message);
+    return error_message;
   }
 
-  String logs = "";
+  String content = "";
   size_t counter = 0;
-  while (logFile.available()) {
-    Serial.println(String(counter) + " - " + String(rows));
+  while (file.available()) {
     if (rows != 0 && counter > rows) break;
-    logs += logFile.readStringUntil('\n');
-    logs += "\n";
+    content += file.readStringUntil('\n');
+    content += "\n";
     counter++;
   }
 
-  logFile.close();
-  return logs;
+  file.close();
+  Serial.println(String(file_name) + ": " + content);
+  return content;
 }
 
 void TSdCard::list_files() {}

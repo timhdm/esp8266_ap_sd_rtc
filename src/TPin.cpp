@@ -76,11 +76,6 @@ String TPin::fetch_pins_log_buffer(const size_t rows, const bool as_html) {
   return as_html ? replace_lb_to_br(log_buffer) : log_buffer;
 }
 
-String TPin::fetch_pins_log_sd(const size_t rows, const bool as_html) {
-  String log_buffer = pin_log.fetch_sd(rows);
-  return as_html ? replace_lb_to_br(log_buffer) : log_buffer;
-}
-
 boolean TPin::is_output(String pin) {
   String status = "";
   if (is_valid_pin(pin)) {
@@ -96,7 +91,6 @@ boolean TPin::is_output(String pin) {
         status = " is undefined.";
         break;
     }
-    Serial.println("[DBG] Pin " + pin + status);
 
     if (pin_number == PinStatus::OUTPUT_PIN) {
       return true;
@@ -153,11 +147,11 @@ String TPin::replace_lb_to_br(String input) {
 //                 PINSTATE                   //
 ////////////////////////////////////////////////
 TPinLog::PinState::PinState(String pin, uint8_t state)
-    : pin(pin), state(state), timestamp(time_now.fetch_time_now_unix()) {}
+    : pin(pin), state(state), timestamp(time_now.fetch_now_unixtime()) {}
 
 String TPinLog::PinState::to_string() {
-  return String(time_now.fetch_time_now_string_short()) + " [PIN] " +
-         String(pin) + " = " + String(state ? "ON" : "OFF");
+  return String(time_now.fetch_now_string_short()) + " [PIN] " + String(pin) +
+         " = " + String(state ? "ON" : "OFF");
 }
 
 ////////////////////////////////////////////////
@@ -177,10 +171,6 @@ String TPinLog::fetch(const size_t rows) {
   }
 
   return result.length() > 0 ? result : "Empty log.";
-}
-
-String TPinLog::fetch_sd(const size_t rows) {
-  return this->sd_log_file->read(this->sd_log_file_name, rows);
 }
 
 void TPinLog::append(String pin, uint8_t state) {

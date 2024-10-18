@@ -15,22 +15,17 @@
 
 class TTime {
  public:
-  TTime() : rtc(Wire), time_now_unix(time(nullptr)), start_time(0) {}
+  TTime() : now_unixtime(0), start_unixtime(0), previous_millis(millis()) {}
 
-  void begin();
-  const time_t fetch_time_now_unix();
-  String fetch_time_now_string();
-  String fetch_time_now_string_short();
-  time_t fetch_online_seconds();
-  String fetch_online_string();
+  void update();
   void set_time(RtcDateTime time);
+  const time_t fetch_now_unixtime();
+  String fetch_now_string_long();
+  String fetch_now_string_short();
+  String fetch_online_string();
 
  private:
-  RtcDS1307<TwoWire> rtc;
-  time_t time_now_unix;
-  tm time_now_structure;
-  time_t start_time;
-
-  time_t update();
-  bool wasError(const char* errorTopic = "");
+  time_t now_unixtime;
+  time_t start_unixtime;
+  time_t previous_millis;
 };
