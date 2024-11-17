@@ -147,10 +147,10 @@ String TPin::replace_lb_to_br(String input) {
 //                 PINSTATE                   //
 ////////////////////////////////////////////////
 TPinLog::PinState::PinState(String pin, uint8_t state)
-    : pin(pin), state(state), timestamp(time_now.fetch_now_unixtime()) {}
+    : pin(pin), state(state), timestamp(time_now.fetch_unixtime()) {}
 
 String TPinLog::PinState::to_string() {
-  return String(time_now.fetch_now_string_short()) + " [PIN] " + String(pin) +
+  return String(time_now.fetch_string_short()) + " [PIN] " + String(pin) +
          " = " + String(state ? "ON" : "OFF");
 }
 

@@ -1,14 +1,14 @@
 #include "TTime.h"
 
-const time_t TTime::fetch_now_unixtime() { return this->now_unixtime; }
+const time_t TTime::fetch_unixtime() { return this->now_unixtime; }
 
-String TTime::fetch_now_string_long() {
+String TTime::fetch_string_long() {
   this->update();
   struct tm *time_structure = localtime(&this->now_unixtime);
   return asctime(time_structure);
 }
 
-String TTime::fetch_now_string_short() {
+String TTime::fetch_string_short() {
   this->update();
   char buffer[100];
   struct tm *time_structure = localtime(&this->now_unixtime);

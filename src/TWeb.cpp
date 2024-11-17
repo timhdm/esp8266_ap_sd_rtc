@@ -12,7 +12,7 @@ void TWeb::begin() {
   });
 
   server.on("/time", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plane", time_now.fetch_now_string_long());
+    request->send(200, "text/plane", time_now.fetch_string_long());
   });
 
   server.on("/time-set", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -31,7 +31,7 @@ void TWeb::begin() {
                         String(month.toInt()) + "." + String(year.toInt()) +
                         " " + String(hours.toInt()) + ":" +
                         String(minutes.toInt()) +
-                        " (time: " + time_now.fetch_now_unixtime() +
+                        " (time: " + time_now.fetch_unixtime() +
                         ", rtc: " + rtc.getDateTime().Unix32Time() + ")");
     }
     request->send(200, "text/plain", "OK");

@@ -19,9 +19,9 @@ class TTime {
 
   void update();
   void set_time(RtcDateTime time);
-  const time_t fetch_now_unixtime();
-  String fetch_now_string_long();
-  String fetch_now_string_short();
+  const time_t fetch_unixtime();
+  String fetch_string_long();
+  String fetch_string_short();
   String fetch_online_string();
 
  private:
