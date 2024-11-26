@@ -12,12 +12,11 @@
 
 class TSdCard {
  public:
-  TSdCard() : log_file(nullptr) {};
   void begin();
-  void append(const char *file_name, String data);
-  String read(const char *file_name, const size_t rows = 0);
-  void list_files();
+  String read(const char *file_name);
+  boolean append(const char *file_name, String message);
+  boolean save(const char *file_name, const String &message);
 
  private:
-  File log_file;
+  File open(const char *file_name, uint8_t mode);
 };

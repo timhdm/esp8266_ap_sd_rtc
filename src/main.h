@@ -13,6 +13,7 @@
 #include "TPin.h"
 #include "TRtc.h"
 #include "TSdCard.h"
+#include "TSettings.h"
 #include "TTime.h"
 #include "TWeb.h"
 

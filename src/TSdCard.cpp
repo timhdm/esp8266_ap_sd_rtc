@@ -17,16 +17,7 @@ void TSdCard::begin() {
   }
 }
 
-void TSdCard::append(const char *file_name, String message) {
-  this->log_file = SD.open(file_name, FILE_WRITE);
-  if (this->log_file) {
-    message.replace("\n", "");
-    this->log_file.println(message);
-    this->log_file.close();
-  }
-}
-
-String TSdCard::read(const char *file_name, const size_t rows) {
+String TSdCard::read(const char *file_name) {
   File file = SD.open(file_name, FILE_READ);
   if (!file) {
     String error_message = "[SDC] Unable to open file: " + String(file_name);
@@ -37,15 +28,57 @@ String TSdCard::read(const char *file_name, const size_t rows) {
   String content = "";
   size_t counter = 0;
   while (file.available()) {
-    if (rows != 0 && counter > rows) break;
     content += file.readStringUntil('\n');
     content += "\n";
     counter++;
   }
 
   file.close();
-  Serial.println(String(file_name) + ": " + content);
+  Serial.printf("[SDC] Read %s: %s\n", String(file_name).c_str(),
+                content.c_str());
   return content;
 }
 
-void TSdCard::list_files() {}
+boolean TSdCard::append(const char *file_name, String message) {
+  File file = open(file_name, FILE_WRITE);
+  boolean error = boolean(!file);
+
+  if (!error) {
+    message.replace("\n", "");
+    file.println(message);
+    file.close();
+  }
+
+  return error;
+}
+
+boolean TSdCard::save(const char *file_name, const String &message) {
+  File file = open(file_name, FILE_WRITE);
+  boolean error = boolean(!file);
+
+  if (!error) {
+    file.truncate(0);
+    size_t bytesWritten = file.print(message);
+
+    if (bytesWritten == 0) {
+      error = true;
+      Serial.println("[SDC] Error writing data to a file.");
+    } else {
+      Serial.printf(
+          "[SDC] The file has been successfully saved. Bytes written: %d\n",
+          bytesWritten);
+    }
+    file.close();
+  }
+
+  return error;
+}
+
+File TSdCard::open(const char *file_name, uint8_t mode) {
+  File file = SD.open(file_name, mode);
+  if (!file) {
+    String error_message = "[SDC] Unable to open file: " + String(file_name);
+    Serial.println(error_message);
+  }
+  return file;
+}

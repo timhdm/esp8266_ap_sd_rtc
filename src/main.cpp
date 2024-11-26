@@ -7,6 +7,7 @@ Preferences preferences;
 Preferences preferences_scheduler;
 TLittleFS little_fs;
 TSdCard sd_card;
+TSettings settings(&sd_card);
 TLog log_system;
 TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::OUTPUT_PIN,     // D1
@@ -32,6 +33,7 @@ void setup() {
   preferences_scheduler.begin("scheduler");
   little_fs.begin();
   sd_card.begin();
+  settings.begin();
   pins.begin(&sd_card);
   log_system.begin(&sd_card, "system.log");
 
@@ -55,6 +57,10 @@ void setup() {
   Serial.println("[SYS] IP address: " + WiFi.softAPIP().toString());
 
   web.begin();
+  Serial.println(settings.get("time_now"));
+  settings.set("time_now", time_now.fetch_string_short());
+  Serial.println(settings.get("time_now"));
+  settings.save();
 }
 
 void loop() {
