@@ -4,7 +4,6 @@
 TTime time_now;
 TWeb web;
 Preferences preferences;
-Preferences preferences_scheduler;
 TLittleFS little_fs;
 TSdCard sd_card;
 TSettings settings(&sd_card);
@@ -20,9 +19,7 @@ TPin pins({PinStatus::OUTPUT_PIN,     // D0
            PinStatus::UNDEFINED_PIN}  // D8
 );
 GTimer timer_1s(MS);
-TDayScheduler scheduler_pin_d0(0, log_system, preferences_scheduler);
-TDayScheduler scheduler_pin_d1(1, log_system, preferences_scheduler);
-TDayScheduler scheduler_pin_d4(4, log_system, preferences_scheduler);
+TDayScheduler scheduler(log_system, settings);
 TRtc rtc;
 
 void setup() {
@@ -30,7 +27,6 @@ void setup() {
   Serial.println("\n[SYS] Initializing...");
 
   preferences.begin("system");
-  preferences_scheduler.begin("scheduler");
   little_fs.begin();
   sd_card.begin();
   settings.begin();
@@ -42,13 +38,17 @@ void setup() {
   rtc.begin(D3, D2);
   time_now.set_time(rtc.getDateTime());
 
-  // TODO
-  scheduler_pin_d0.set(time_now.fetch_unixtime(), 16, 50, 30);
-  scheduler_pin_d1.set(time_now.fetch_unixtime(), 16, 51, 21);
-  scheduler_pin_d4.set(time_now.fetch_unixtime(), 16, 52, 10);
-  scheduler_pin_d0.save();
-  scheduler_pin_d1.save();
-  scheduler_pin_d4.save();
+  // TODO debug, remove later
+  time_t now = time_now.fetch_unixtime();
+  struct tm* timeinfo = localtime(&now);
+  int hour_ = timeinfo->tm_hour;   // час (0-23)
+  int minute_ = timeinfo->tm_min;  // минута (0-59)
+  pins.set_pin("D0", false);
+  pins.set_pin("D1", false);
+  scheduler.load();
+  scheduler.set_scheduler(0, true, hour_, minute_ + 1, 3);
+  scheduler.set_scheduler(1, true, hour_, minute_ + 2, 1);
+  scheduler.save();
 
   String ssid = getSsid();
   const char* password = "esp12345";  // TODO
@@ -57,10 +57,6 @@ void setup() {
   Serial.println("[SYS] IP address: " + WiFi.softAPIP().toString());
 
   web.begin();
-  Serial.println(settings.get("time_now"));
-  settings.set("time_now", time_now.fetch_string_short());
-  Serial.println(settings.get("time_now"));
-  settings.save();
 }
 
 void loop() {
@@ -72,17 +68,17 @@ void loop() {
 //                 FUNCTIONS                  //
 ////////////////////////////////////////////////
 void loop_scheduler(const time_t& now_unixtime) {
-  bool d0_schedule_status = scheduler_pin_d0.get_status(now_unixtime);
+  boolean d0_schedule_status = scheduler.get_status(0, now_unixtime);
   if (pins.get_pin("D0") != d0_schedule_status)
     pins.set_pin("D0", d0_schedule_status);
 
-  bool d1_schedule_status = scheduler_pin_d1.get_status(now_unixtime);
+  boolean d1_schedule_status = scheduler.get_status(1, now_unixtime);
   if (pins.get_pin("D1") != d1_schedule_status)
     pins.set_pin("D1", d1_schedule_status);
 
-  bool d4_schedule_status = scheduler_pin_d4.get_status(now_unixtime);
-  if (pins.get_pin("D4") != d4_schedule_status)
-    pins.set_pin("D4", d4_schedule_status);
+  Serial.printf("%s D0: %d, D1: %d\n", time_now.fetch_string_short(),
+                d0_schedule_status,
+                d1_schedule_status);  // TODO debug, remove later
 }
 
 String getSsid() {

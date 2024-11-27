@@ -34,7 +34,7 @@ String TSdCard::read(const char *file_name) {
   }
 
   file.close();
-  Serial.printf("[SDC] Read %s: %s\n", String(file_name).c_str(),
+  Serial.printf("[SDC] Read %s: %s", String(file_name).c_str(),
                 content.c_str());
   return content;
 }

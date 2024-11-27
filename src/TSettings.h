@@ -18,8 +18,13 @@ class TSettings {
   };
   void begin() { load(); };
   void save();
-  String get(const String &key);
+  String getString(const String &key, String default_value);
+  uint32_t getInt(const String &key, uint32_t default_value);
+  boolean getBoolean(const String &key, boolean default_value);
+
   void set(const String &key, const String &value);
+  void set(const String &key, const uint32_t &value);
+  void set(const String &key, const boolean &value);
 
  private:
   TSdCard *sd_card;
